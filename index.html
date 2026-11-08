@@ -1,41 +1,52 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" class="h-full">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>JotWai - เลขาส่วนตัว AI (จดไว)</title>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="JotWai Pro">
+  <meta name="theme-color" content="#0C0A09">
+  <title>JotWai Pro - AI Executive Personal Assistant</title>
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Google Fonts: Prompt -->
+
+  <!-- Google Fonts: Prompt & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
             sans: ['Prompt', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
           },
           colors: {
-            'jot-bg': '#FAF8F5',
-            'jot-card': '#FFFFFF',
-            'jot-yellow': '#F5C842',
-            'jot-yellow-hover': '#EDB92E',
-            'jot-yellow-light': '#FEF7E6',
-            'jot-yellow-dark': '#D49B0E',
-            'jot-gray': '#737373',
-            'jot-gray-light': '#F1EFEA',
-            'jot-dark': '#262626',
-            'jot-pink': '#FEECEF',
-            'jot-pink-text': '#E45873',
+            brand: {
+              50: '#FFFDF5',
+              100: '#FFF8E1',
+              400: '#FBBF24',
+              500: '#F59E0B',
+              600: '#D97706',
+              dark: '#92400E',
+            },
+            surface: {
+              ground: '#09090B',
+              card: '#18181B',
+              cardHover: '#27272A',
+              border: '#27272A',
+              subtle: '#3F3F46',
+            }
           },
           boxShadow: {
-            'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
-            'bubble': '0 2px 8px rgba(0, 0, 0, 0.04)',
+            'glow-amber': '0 0 25px -4px rgba(245, 158, 11, 0.35)',
+            'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.45)',
+            'sheet': '0 -10px 40px rgba(0, 0, 0, 0.7)',
           }
         }
       }
@@ -46,62 +57,122 @@
     * {
       -webkit-tap-highlight-color: transparent;
       user-select: none;
+      box-sizing: border-box;
     }
     input, textarea {
       user-select: text;
     }
-    ::-webkit-scrollbar {
-      display: none;
-    }
+    ::-webkit-scrollbar { display: none; }
     body {
       scrollbar-width: none;
       -ms-overflow-style: none;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .safe-bottom {
+      padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
     }
     .custom-scroll {
       overflow-y: auto;
       scrollbar-width: none;
     }
-    .custom-scroll::-webkit-scrollbar {
+    .custom-scroll::-webkit-scrollbar { display: none; }
+
+    /* Animated Tab views */
+    .tab-view {
       display: none;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .tab-content {
-      display: none;
-      animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-    .tab-content.active {
+    .tab-view.active {
       display: flex;
+      opacity: 1;
+      transform: translateY(0);
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
+
+    /* Sound Visualizer Bars */
+    @keyframes soundWave {
+      0%, 100% { height: 6px; }
+      50% { height: 26px; }
     }
-    @keyframes pulseRecord {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.15); opacity: 0.7; }
+    .sound-bar {
+      animation: soundWave 0.9s infinite ease-in-out;
     }
-    .recording-pulse {
-      animation: pulseRecord 1.2s infinite ease-in-out;
-      background-color: #EF4444 !important;
-      color: white !important;
+    .sound-bar:nth-child(2) { animation-delay: 0.15s; }
+    .sound-bar:nth-child(3) { animation-delay: 0.3s; }
+    .sound-bar:nth-child(4) { animation-delay: 0.45s; }
+    .sound-bar:nth-child(5) { animation-delay: 0.2s; }
+
+    /* Bottom Sheet Dynamic Slide */
+    .sheet-wrapper {
+      transition: visibility 0.25s ease-out;
+    }
+    .sheet-backdrop {
+      transition: opacity 0.25s ease-out;
+    }
+    .sheet-container {
+      transition: transform 0.32s cubic-bezier(0.2, 0.9, 0.3, 1);
+    }
+    .sheet-wrapper.hidden-sheet {
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .sheet-wrapper.hidden-sheet .sheet-backdrop {
+      opacity: 0;
+    }
+    .sheet-wrapper.hidden-sheet .sheet-container {
+      transform: translateY(100%);
+    }
+
+    /* Micro glow & blur */
+    .glass-nav {
+      background: rgba(18, 18, 22, 0.78);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-header {
+      background: rgba(9, 9, 11, 0.82);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     }
   </style>
 </head>
-<body class="bg-stone-900 min-h-screen flex items-center justify-center p-0 sm:p-4 text-stone-800 font-sans antialiased">
+<body class="bg-black text-stone-100 font-sans antialiased h-full w-full flex items-center justify-center p-0 sm:p-4 select-none overflow-hidden">
 
-  <!-- Mobile Frame Container -->
-  <div class="relative w-full max-w-[430px] h-[100dvh] sm:h-[890px] bg-jot-bg sm:rounded-[44px] shadow-2xl overflow-hidden flex flex-col border border-stone-200/40">
+  <!-- Mobile Container Envelope (Responsive max-w viewport) -->
+  <div class="relative w-full max-w-[440px] h-[100dvh] sm:h-[915px] bg-surface-ground sm:rounded-[50px] shadow-2xl overflow-hidden flex flex-col border border-stone-800/80">
 
-    <!-- Top Status Bar -->
-    <div class="pt-3 px-7 pb-1 flex justify-between items-center text-xs font-semibold text-stone-800 shrink-0 z-30 select-none">
-      <span id="device-time" class="tracking-tight text-sm font-medium">09:41</span>
-      <div class="hidden sm:block w-24 h-4 bg-black rounded-full mx-auto -mt-1 opacity-90"></div>
-      <div class="flex items-center space-x-1.5 text-stone-700">
-        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.22 19.58 10.57 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
-        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4zm0 3.5c3.55 0 6.78 1.45 9.14 3.8L12 18.52 2.86 11.3C5.22 8.95 8.45 7.5 12 7.5z"/></svg>
-        <div class="flex items-center space-x-1 pl-1">
-          <span class="text-[11px] font-bold">58</span>
-          <div class="w-5 h-2.5 border border-stone-800 rounded-sm p-[1px] flex items-center">
-            <div class="h-full bg-stone-800 rounded-xs w-[60%]"></div>
+    <!-- In-App Floating Dynamic Island Notification Toast -->
+    <div id="toast-island" class="absolute top-3 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-[360px] pointer-events-none transition-all duration-300 transform -translate-y-12 opacity-0 scale-95">
+      <div id="toast-inner" class="bg-surface-card/95 backdrop-blur-xl border border-stone-700/80 px-4 py-2.5 rounded-3xl shadow-glow-amber flex items-center justify-between text-xs font-medium text-stone-100">
+        <div class="flex items-center space-x-2.5 truncate">
+          <span id="toast-icon" class="text-base">⚡</span>
+          <span id="toast-msg" class="truncate font-sans">กำลังอัปเดตระบบ</span>
+        </div>
+        <span id="toast-tag" class="text-[10px] bg-stone-800 text-stone-400 px-2 py-0.5 rounded-full font-mono">SYS</span>
+      </div>
+    </div>
+
+    <!-- Status Bar (iOS Pro Visuals) -->
+    <div class="pt-3 px-7 pb-1.5 flex justify-between items-center text-xs font-semibold text-stone-300 shrink-0 z-30 select-none">
+      <span id="sys-clock" class="tracking-tight text-sm font-mono font-medium">09:41</span>
+      
+      <!-- Interactive Dynamic Island Pill -->
+      <div onclick="toggleTTSActive()" title="แตะเพื่อเปิด/ปิดเสียง AI พูดสรุป" class="cursor-pointer group flex items-center space-x-1.5 bg-stone-900 border border-stone-800 px-3 py-1 rounded-full text-[10px] text-stone-300 hover:border-brand-500/50 transition">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span id="tts-status-label" class="font-mono text-stone-400 group-hover:text-brand-400 transition">TTS ON</span>
+      </div>
+
+      <div class="flex items-center space-x-2 text-stone-400">
+        <span class="text-[11px] font-mono text-stone-400">5G</span>
+        <!-- Battery Pro -->
+        <div class="flex items-center space-x-1">
+          <span class="text-[10px] font-mono text-stone-300">99%</span>
+          <div class="w-5 h-2.5 border border-stone-600 rounded-[3px] p-[1px] flex items-center">
+            <div class="h-full bg-emerald-400 rounded-2xs w-full"></div>
           </div>
         </div>
       </div>
@@ -111,544 +182,878 @@
     <main class="flex-1 relative overflow-hidden flex flex-col">
 
       <!-- ==============================================
-           TAB 1: แชท (CHAT)
+           VIEW 1: AI CHAT (CORE EXECUTIVE COPILOT)
            ============================================== -->
-      <section id="tab-chat" class="tab-content active flex-col h-full flex-1 overflow-hidden">
+      <section id="view-chat" class="tab-view active flex-col h-full flex-1 overflow-hidden">
         
-        <!-- Header -->
-        <header class="px-5 py-2 flex items-center justify-between shrink-0 bg-jot-bg/95 backdrop-blur-sm z-20">
-          <div class="flex items-center space-x-1.5">
-            <h1 class="text-2xl font-bold tracking-tight text-stone-900">JotWai</h1>
-            <span class="text-xl">✏️</span>
+        <!-- Executive Header -->
+        <header class="px-5 py-2.5 flex items-center justify-between shrink-0 glass-header z-20">
+          <div class="flex items-center space-x-2.5">
+            <div class="relative">
+              <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-brand-600 to-amber-300 flex items-center justify-center text-stone-950 font-bold text-base shadow-glow-amber">
+                ⚡
+              </div>
+              <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-stone-950"></div>
+            </div>
+            <div>
+              <div class="flex items-center space-x-1.5">
+                <h1 class="text-base font-bold tracking-tight text-white">JotWai Pro</h1>
+                <span class="text-[10px] bg-brand-500/20 text-brand-400 px-1.5 py-0.5 rounded-md font-mono font-bold">2.5 FLASH</span>
+              </div>
+              <p id="user-greeting" class="text-[11px] text-stone-400">เลขาประจำตัว: คุณเดียร์</p>
+            </div>
           </div>
 
-          <div class="flex items-center space-x-2.5">
-            <div class="flex items-center space-x-1 bg-white/80 border border-stone-200/80 px-2.5 py-1 rounded-full shadow-xs text-xs font-semibold text-stone-700">
-              <span class="text-amber-500 font-bold">⚡</span>
-              <span id="energy-count">19</span>
-            </div>
-
-            <button onclick="openHelpModal()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-stone-200/60 active:scale-95 transition text-stone-700">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <div class="flex items-center space-x-2">
+            <!-- Energy Battery Pill -->
+            <button onclick="openBottomSheet('sheet-settings')" class="flex items-center space-x-1.5 bg-stone-900 border border-stone-800 px-2.5 py-1.2 rounded-full text-xs font-mono text-stone-200 active:scale-95 transition">
+              <span class="text-brand-400">⚡</span>
+              <span id="energy-meter">100</span><span class="text-stone-500 text-[10px]">%</span>
             </button>
 
-            <button onclick="openSettingsModal()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-stone-200/60 active:scale-95 transition text-stone-700">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            <!-- Settings Button -->
+            <button onclick="openBottomSheet('sheet-settings')" class="w-8 h-8 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center text-stone-300 hover:text-white active:scale-95 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"></path><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"></path></svg>
             </button>
           </div>
         </header>
 
-        <!-- Chat Stream Area -->
-        <div id="chat-messages" class="flex-1 custom-scroll px-4 py-3 space-y-4">
-          <!-- Quick Suggestions -->
-          <div class="flex items-center space-x-2 overflow-x-auto pb-1 pt-1 text-xs shrink-0">
-            <button onclick="sendQuickPrompt('ประมาณ 09:30 ตื่นนอน ไปขอคัดสำเนาเรื่องการสอบนายอำเภอโกสัมภีที่พรรคประชาชนขอไว้ ที่ศูนย์ราชการ ห้องปกครอง(อปท.)')" 
-              class="shrink-0 bg-white/90 hover:bg-jot-yellow-light border border-stone-200/70 text-stone-700 px-3 py-1.5 rounded-full transition active:scale-95 shadow-2xs">
-              ⚡ คัดสำเนา 09:30
+        <!-- Chat Stream Streamliner -->
+        <div id="chat-scroller" class="flex-1 custom-scroll px-4 py-3 space-y-3.5">
+          <!-- Suggestion Action Chips -->
+          <div class="flex items-center space-x-2 overflow-x-auto pb-1 text-xs shrink-0 no-scrollbar">
+            <button onclick="sendQuickPrompt('พรุ่งนี้ 09:30 นัดคุยงานจัดซื้ออุปกรณ์บ่อปลาและเซนเซอร์')" 
+              class="shrink-0 bg-surface-card hover:bg-surface-cardHover border border-stone-800 text-stone-300 px-3 py-1.5 rounded-full transition active:scale-95 flex items-center space-x-1.5">
+              <span>🐟 นัดคุยระบบบ่อปลา</span>
             </button>
-            <button onclick="sendQuickPrompt('สิ้นเดือน 28-29 มีไปงานเชียงใหม่เฟส ประมาณวันที่ 20 เดดไลน์การทำไฟเดินระบบบ่อปลา')" 
-              class="shrink-0 bg-white/90 hover:bg-jot-yellow-light border border-stone-200/70 text-stone-700 px-3 py-1.5 rounded-full transition active:scale-95 shadow-2xs">
-              🎪 งานเชียงใหม่เฟส & เดดไลน์
+            <button onclick="sendQuickPrompt('จ่ายค่าไฟ 650 บาท และรับเงินค่าส่งปลา 1,800 บาท')" 
+              class="shrink-0 bg-surface-card hover:bg-surface-cardHover border border-stone-800 text-stone-300 px-3 py-1.5 rounded-full transition active:scale-95 flex items-center space-x-1.5">
+              <span>💰 บันทึกรายรับ-รายจ่าย</span>
             </button>
-            <button onclick="sendQuickPrompt('พรุ่งนี้ 14:00 นัดตรวจสุขภาพฟัน ที่โรงพยาบาลกรุงเทพ')" 
-              class="shrink-0 bg-white/90 hover:bg-jot-yellow-light border border-stone-200/70 text-stone-700 px-3 py-1.5 rounded-full transition active:scale-95 shadow-2xs">
-              🦷 หมอฟัน 14:00
+            <button onclick="sendQuickPrompt('เดดไลน์ส่งรายงานสรุปกิจกรรมสภาเด็กฯ วันที่ 25 นี้')" 
+              class="shrink-0 bg-surface-card hover:bg-surface-cardHover border border-stone-800 text-stone-300 px-3 py-1.5 rounded-full transition active:scale-95 flex items-center space-x-1.5">
+              <span>📋 บันทึกเดดไลน์งาน</span>
             </button>
           </div>
 
-          <!-- Default Welcome Message -->
+          <!-- Initial Assistant Message -->
           <div class="flex items-start space-x-2.5">
-            <div class="w-8 h-8 rounded-full bg-jot-yellow text-stone-900 font-bold flex items-center justify-center text-xs shrink-0 shadow-sm">
+            <div class="w-8 h-8 rounded-xl bg-surface-card border border-stone-800 text-brand-400 font-bold flex items-center justify-center text-xs shrink-0 shadow-sm">
               AI
             </div>
-            <div class="bg-white border border-stone-200/70 text-stone-800 rounded-2xl rounded-tl-sm px-4 py-3 shadow-bubble max-w-[85%] text-sm">
-              <p class="font-medium text-stone-900 mb-1">สวัสดีครับ! เลขา JotWai พร้อมช่วยงานแล้ว ✨</p>
-              <p class="text-stone-600 text-xs leading-relaxed">
-                พิมพ์บอกหรือกดไมค์พูดอะไรก็ได้ เช่น นัดหมาย, สิ่งที่ต้องทำ หรือโน้ตเตือนความจำ ผมจะแยกตารางงานและจัดรายการสิ่งที่ต้องทำให้อัตโนมัติครับ
-              </p>
+            <div class="bg-surface-card border border-stone-800/80 rounded-2xl rounded-tl-xs px-4 py-3 text-stone-200 text-xs sm:text-sm max-w-[88%] shadow-glass leading-relaxed">
+              <div class="flex items-center justify-between pb-1.5 mb-1.5 border-b border-stone-800 text-stone-400 text-[11px]">
+                <span class="font-medium text-stone-300">Executive Briefing</span>
+                <span class="font-mono text-[10px]">READY</span>
+              </div>
+              <p>สวัสดีครับคุณเดียร์! วันนี้มีนัดหมาย งานค้าง หรือบิลค่าใช้จ่ายอะไรให้ผมช่วยบันทึกและจัดการลงระบบไหมครับ? สั่งด้วยเสียงหรือพิมพ์ภาษาพูดได้เลยครับ</p>
             </div>
           </div>
         </div>
 
-        <!-- Chat Input Footer (Completed) -->
-        <div class="px-3 py-2 bg-jot-bg shrink-0 border-t border-stone-200/40">
-          <form id="chat-form" onsubmit="handleChatSubmit(event)" class="flex items-center space-x-1.5">
-            <!-- Image Button -->
-            <button type="button" onclick="triggerImageMock()" title="แนบรูปภาพหรือสลิป" class="w-9 h-9 rounded-full bg-stone-200/60 hover:bg-stone-200 flex items-center justify-center text-stone-600 transition active:scale-95 shrink-0">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+        <!-- Voice Live Audio Visualizer Overlay (Appears only during recording) -->
+        <div id="voice-overlay" class="hidden px-5 py-2 bg-rose-950/40 border-t border-rose-500/30 backdrop-blur-md flex items-center justify-between animate-fade-in">
+          <div class="flex items-center space-x-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span>
+            <span class="text-xs font-mono text-rose-300 tracking-wide font-semibold">LISTENING AUDIO...</span>
+          </div>
+          <div class="flex items-center space-x-1 h-6">
+            <div class="w-1 bg-rose-400 rounded-full sound-bar"></div>
+            <div class="w-1 bg-rose-400 rounded-full sound-bar"></div>
+            <div class="w-1 bg-rose-400 rounded-full sound-bar"></div>
+            <div class="w-1 bg-rose-400 rounded-full sound-bar"></div>
+            <div class="w-1 bg-rose-400 rounded-full sound-bar"></div>
+          </div>
+          <button onclick="stopVoiceRecording()" class="text-xs text-stone-300 underline font-mono">เสร็จสิ้น</button>
+        </div>
+
+        <!-- Input Bar (Cockpit Controller) -->
+        <div class="px-3 py-2.5 bg-surface-ground shrink-0 border-t border-stone-900 safe-bottom">
+          <form id="chat-form" onsubmit="handleChatSubmit(event)" class="flex items-end space-x-2">
+            
+            <!-- Quick Voice Input Button -->
+            <button type="button" id="mic-btn" onclick="toggleVoiceInput()" title="กดเพื่อพูด" 
+              class="w-10 h-10 rounded-2xl bg-surface-card border border-stone-800 hover:border-brand-500/50 flex items-center justify-center text-stone-300 transition active:scale-90 shrink-0 mb-0.5">
+              <svg id="mic-icon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
             </button>
 
-            <!-- Voice Button with SpeechRecognition -->
-            <button type="button" id="mic-btn" onclick="toggleVoiceInput()" title="กดเพื่อพูด" class="w-9 h-9 rounded-full bg-stone-200/60 hover:bg-stone-200 flex items-center justify-center text-stone-600 transition active:scale-95 shrink-0">
-              <svg id="mic-icon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
-            </button>
-
-            <!-- Text Input -->
-            <div class="flex-1 relative">
-              <input type="text" id="chat-input" placeholder="พิมพ์บอกเลขา เช่น พรุ่งนี้ 10 โมงมีนัด..." autocomplete="off"
-                class="w-full bg-white border border-stone-300/80 rounded-full py-2 pl-4 pr-3 text-xs sm:text-sm focus:outline-none focus:border-jot-yellow focus:ring-2 focus:ring-jot-yellow/20 shadow-2xs text-stone-800 placeholder-stone-400" />
+            <!-- Auto-expanding Textarea Input Box -->
+            <div class="flex-1 bg-surface-card border border-stone-800 rounded-2xl px-3.5 py-2.5 focus-within:border-brand-500/70 focus-within:ring-2 focus-within:ring-brand-500/20 transition flex items-center">
+              <textarea id="chat-input" rows="1" placeholder="บอกเลขา เช่น พรุ่งนี้ 10:00 เข้าสวน..." 
+                oninput="autoResizeTextarea(this)"
+                onkeydown="handleKeySubmit(event)"
+                class="w-full bg-transparent resize-none text-xs sm:text-sm text-stone-100 placeholder-stone-500 focus:outline-none max-h-24 leading-5 custom-scroll"></textarea>
             </div>
 
-            <!-- Send Button -->
-            <button type="submit" class="w-9 h-9 rounded-full bg-jot-yellow hover:bg-jot-yellow-hover text-stone-900 font-bold flex items-center justify-center transition active:scale-90 shadow-sm shrink-0">
-              <svg class="w-4 h-4 ml-0.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+            <!-- Send Action Button -->
+            <button type="submit" class="w-10 h-10 rounded-2xl bg-gradient-to-r from-brand-500 to-amber-400 text-stone-950 font-bold flex items-center justify-center transition active:scale-90 shadow-glow-amber shrink-0 mb-0.5">
+              <svg class="w-4 h-4 translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
             </button>
           </form>
         </div>
       </section>
 
       <!-- ==============================================
-           TAB 2: ตารางนัดหมาย (CALENDAR / SCHEDULE)
+           VIEW 2: CALENDAR TIMELINE (SMART SCHEDULE)
            ============================================== -->
-      <section id="tab-calendar" class="tab-content flex-col h-full flex-1 overflow-hidden p-4">
-        <div class="flex items-center justify-between mb-4">
+      <section id="view-calendar" class="tab-view flex-col h-full flex-1 overflow-hidden p-4">
+        <div class="flex items-center justify-between mb-3 shrink-0">
           <div>
-            <h2 class="text-xl font-bold text-stone-900">ตารางนัดหมาย 📅</h2>
-            <p class="text-xs text-stone-500">จัดการนัดหมายที่เลขาบันทึกไว้ให้</p>
+            <h2 class="text-lg font-bold text-white flex items-center space-x-1.5">
+              <span>ปฏิทินนัดหมาย</span>
+              <span id="events-count-pill" class="text-[10px] bg-brand-500/20 text-brand-400 px-2 py-0.5 rounded-full font-mono">0 รายการ</span>
+            </h2>
+            <p class="text-xs text-stone-400">ซิงก์เข้า Google Calendar หรือ Apple Calendar ได้ทันที</p>
           </div>
-          <button onclick="clearAllEvents()" class="text-xs text-red-500 hover:underline">ล้างทั้งหมด</button>
+          <button onclick="clearAllEvents()" class="text-xs text-rose-400 hover:text-rose-300 active:scale-95 transition">ล้างตาราง</button>
         </div>
 
-        <div id="events-list" class="flex-1 custom-scroll space-y-3">
-          <!-- Empty State Default -->
-          <div id="no-events" class="h-64 flex flex-col items-center justify-center text-stone-400 text-center">
-            <span class="text-4xl mb-2">🗓️</span>
-            <p class="text-sm">ยังไม่มีนัดหมายในตาราง</p>
-            <p class="text-xs mt-1">ลองพิมพ์บอกเลขาในหน้าแชทได้เลย</p>
-          </div>
+        <div id="events-stream" class="flex-1 custom-scroll space-y-3 pb-6">
+          <!-- Dynamic Event Cards will inject here -->
         </div>
       </section>
 
       <!-- ==============================================
-           TAB 3: สิ่งที่ต้องทำ & โน้ต (TASKS)
+           VIEW 3: TASKS & MEMOS (KANBAN / TO-DO)
            ============================================== -->
-      <section id="tab-tasks" class="tab-content flex-col h-full flex-1 overflow-hidden p-4">
-        <div class="flex items-center justify-between mb-4">
+      <section id="view-tasks" class="tab-view flex-col h-full flex-1 overflow-hidden p-4">
+        <div class="flex items-center justify-between mb-2 shrink-0">
           <div>
-            <h2 class="text-xl font-bold text-stone-900">สิ่งที่ต้องทำ & โน้ต 📝</h2>
-            <p class="text-xs text-stone-500">รายการภารกิจและสิ่งที่เลขาช่วยจำ</p>
+            <h2 class="text-lg font-bold text-white">สิ่งที่ต้องทำ & โน้ต</h2>
+            <p class="text-xs text-stone-400">จัดการภารกิจและรายการเตือนความจำ</p>
           </div>
-          <button onclick="clearCompletedTasks()" class="text-xs text-stone-500 hover:underline">ลบที่ทำเสร็จแล้ว</button>
+          <button onclick="clearDoneTasks()" class="text-xs text-stone-400 hover:text-stone-200 active:scale-95 transition">ลบที่เสร็จแล้ว</button>
         </div>
 
-        <div id="tasks-list" class="flex-1 custom-scroll space-y-2">
-          <!-- Empty State Default -->
-          <div id="no-tasks" class="h-64 flex flex-col items-center justify-center text-stone-400 text-center">
-            <span class="text-4xl mb-2">📋</span>
-            <p class="text-sm">ไม่มีงานค้างในรายการ</p>
-            <p class="text-xs mt-1">บันทึกสิ่งที่ต้องทำได้รวดเร็วผ่านเสียงหรือแชท</p>
+        <!-- Task Filter Switcher -->
+        <div class="flex items-center space-x-2 mb-3 shrink-0 text-xs">
+          <button onclick="filterTasks('all')" id="filter-all" class="px-3 py-1 rounded-full bg-brand-500 text-stone-950 font-bold transition">ทั้งหมด</button>
+          <button onclick="filterTasks('pending')" id="filter-pending" class="px-3 py-1 rounded-full bg-surface-card text-stone-400 hover:text-white border border-stone-800 transition">รอดำเนินการ</button>
+          <button onclick="filterTasks('completed')" id="filter-completed" class="px-3 py-1 rounded-full bg-surface-card text-stone-400 hover:text-white border border-stone-800 transition">เสร็จสิ้น</button>
+        </div>
+
+        <div id="tasks-stream" class="flex-1 custom-scroll space-y-2 pb-6">
+          <!-- Dynamic Task Cards will inject here -->
+        </div>
+      </section>
+
+      <!-- ==============================================
+           VIEW 4: EXPENSES & LEDGER (สมุดบัญชีด่วน)
+           ============================================== -->
+      <section id="view-ledger" class="tab-view flex-col h-full flex-1 overflow-hidden p-4">
+        <div class="flex items-center justify-between mb-3 shrink-0">
+          <div>
+            <h2 class="text-lg font-bold text-white">บัญชีรายรับ-รายจ่าย</h2>
+            <p class="text-xs text-stone-400">ถอดค่าใช้จ่ายและเงินเข้าจากแชทอัตโนมัติ</p>
           </div>
+          <button onclick="clearAllLedger()" class="text-xs text-rose-400 hover:text-rose-300">ล้างยอด</button>
+        </div>
+
+        <!-- Financial Summary Widget Card -->
+        <div class="grid grid-cols-2 gap-2.5 mb-3.5 shrink-0">
+          <div class="bg-surface-card border border-stone-800 p-3 rounded-2xl">
+            <span class="text-[10px] text-stone-400 uppercase tracking-wider font-mono font-semibold">รายรับรวม (IN)</span>
+            <p id="total-income" class="text-lg font-bold font-mono text-emerald-400 mt-0.5">฿0</p>
+          </div>
+          <div class="bg-surface-card border border-stone-800 p-3 rounded-2xl">
+            <span class="text-[10px] text-stone-400 uppercase tracking-wider font-mono font-semibold">รายจ่ายรวม (OUT)</span>
+            <p id="total-expense" class="text-lg font-bold font-mono text-rose-400 mt-0.5">฿0</p>
+          </div>
+        </div>
+
+        <div id="ledger-stream" class="flex-1 custom-scroll space-y-2 pb-6">
+          <!-- Dynamic Ledger Entries -->
         </div>
       </section>
 
     </main>
 
-    <!-- BOTTOM NAVIGATION DOCK (iOS Style) -->
-    <nav class="h-16 bg-white/95 backdrop-blur-md border-t border-stone-200/80 px-6 flex items-center justify-around shrink-0 z-30">
-      <!-- Nav Item 1: Chat -->
-      <button onclick="switchTab('tab-chat')" id="nav-btn-chat" class="flex flex-col items-center space-y-1 text-jot-yellow-dark">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-        <span class="text-[10px] font-medium tracking-tight">แชท</span>
+    <!-- NATIVE 4-DOCK NAVIGATION CONTROLLER -->
+    <nav class="h-16 glass-nav px-4 flex items-center justify-around shrink-0 z-30">
+      
+      <!-- Tab 1: Chat -->
+      <button onclick="switchTab('view-chat')" id="tab-btn-chat" class="flex flex-col items-center space-y-1 text-brand-400 transition-all active:scale-90">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        <span class="text-[10px] font-semibold tracking-tight">ผู้ช่วย</span>
       </button>
 
-      <!-- Nav Item 2: Calendar -->
-      <button onclick="switchTab('tab-calendar')" id="nav-btn-calendar" class="flex flex-col items-center space-y-1 text-stone-400 hover:text-stone-700 transition">
+      <!-- Tab 2: Calendar -->
+      <button onclick="switchTab('view-calendar')" id="tab-btn-calendar" class="flex flex-col items-center space-y-1 text-stone-400 hover:text-stone-200 transition-all active:scale-90 relative">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
         <span class="text-[10px] font-medium tracking-tight">ตารางงาน</span>
       </button>
 
-      <!-- Nav Item 3: Tasks -->
-      <button onclick="switchTab('tab-tasks')" id="nav-btn-tasks" class="flex flex-col items-center space-y-1 text-stone-400 hover:text-stone-700 transition">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-        <span class="text-[10px] font-medium tracking-tight">รายการงาน</span>
+      <!-- Tab 3: Tasks -->
+      <button onclick="switchTab('view-tasks')" id="tab-btn-tasks" class="flex flex-col items-center space-y-1 text-stone-400 hover:text-stone-200 transition-all active:scale-90 relative">
+        <div class="relative">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+          <span id="badge-tasks" class="hidden absolute -top-1 -right-2 bg-brand-500 text-stone-950 text-[9px] font-mono font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+        </div>
+        <span class="text-[10px] font-medium tracking-tight">ภารกิจ</span>
       </button>
+
+      <!-- Tab 4: Ledger -->
+      <button onclick="switchTab('view-ledger')" id="tab-btn-ledger" class="flex flex-col items-center space-y-1 text-stone-400 hover:text-stone-200 transition-all active:scale-90">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        <span class="text-[10px] font-medium tracking-tight">รายรับจ่าย</span>
+      </button>
+
     </nav>
 
-    <!-- iOS Home Indicator bar -->
-    <div class="h-4 bg-white/95 flex justify-center items-center pb-1">
-      <div class="w-32 h-1 bg-stone-300 rounded-full"></div>
+    <!-- iOS Home Indicator Accent -->
+    <div class="h-3 bg-surface-ground flex justify-center items-center pb-1">
+      <div class="w-32 h-1 bg-stone-700 rounded-full"></div>
     </div>
   </div>
 
-  <!-- ================= MODALS ================= -->
+  <!-- ==============================================
+       BOTTOM SHEET: SETTINGS & MODEL CONFIGURATION
+       ============================================== -->
+  <div id="sheet-settings" class="sheet-wrapper fixed inset-0 z-50 hidden-sheet">
+    <div class="sheet-backdrop fixed inset-0 bg-black/70 backdrop-blur-sm" onclick="closeBottomSheet('sheet-settings')"></div>
+    <div class="sheet-container fixed bottom-0 left-0 right-0 max-w-[440px] mx-auto bg-surface-card rounded-t-[36px] p-6 shadow-sheet border-t border-stone-800 z-10 max-h-[88vh] overflow-y-auto">
+      
+      <!-- Grab Bar -->
+      <div class="w-12 h-1 bg-stone-700 rounded-full mx-auto mb-4"></div>
 
-  <!-- Settings Modal -->
-  <div id="settings-modal" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl w-full max-w-sm p-5 shadow-2xl border border-stone-200">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-base font-bold text-stone-900">⚙️ การตั้งค่า JotWai</h3>
-        <button onclick="closeSettingsModal()" class="text-stone-400 hover:text-stone-600 text-lg">&times;</button>
+      <div class="flex justify-between items-center mb-5">
+        <div>
+          <h3 class="text-base font-bold text-white">⚙️ ตั้งค่าระบบ JotWai Pro</h3>
+          <p class="text-[11px] text-stone-400">ควบคุมโมเดล AI และความจำระบบ</p>
+        </div>
+        <button onclick="closeBottomSheet('sheet-settings')" class="w-7 h-7 bg-stone-800 rounded-full flex items-center justify-center text-stone-400 hover:text-white">&times;</button>
       </div>
 
-      <div class="space-y-3.5 text-xs">
+      <div class="space-y-4 text-xs">
         <div>
-          <label class="block font-medium text-stone-700 mb-1">ชื่อผู้ใช้</label>
-          <input type="text" id="setting-username" value="คุณพัท" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-stone-800" />
+          <label class="block font-medium text-stone-300 mb-1">ชื่อผู้ใช้งานที่เรียก</label>
+          <input type="text" id="config-username" value="คุณเดียร์" class="w-full border border-stone-700 bg-surface-ground rounded-xl px-3.5 py-2.5 text-stone-100 focus:outline-none focus:border-brand-500 font-medium" />
         </div>
 
         <div>
-          <label class="block font-medium text-stone-700 mb-1">Gemini API Key (ถ้าต้องการใช้โมเดลจริง)</label>
-          <input type="password" id="setting-api-key" placeholder="AIzaSy..." class="w-full border border-stone-300 rounded-xl px-3 py-2 text-stone-800 font-mono" />
-          <p class="text-[10px] text-stone-400 mt-1">เว้นว่างไว้จะใช้ Local Smart Parser ในเครื่องอัตโนมัติ</p>
+          <label class="block font-medium text-stone-300 mb-1">Google Gemini API Key (อุปกรณ์ต่อขยาย)</label>
+          <input type="password" id="config-api-key" placeholder="AIzaSy..." class="w-full border border-stone-700 bg-surface-ground rounded-xl px-3.5 py-2.5 text-stone-100 font-mono focus:outline-none focus:border-brand-500" />
+          <p class="text-[10px] text-stone-500 mt-1">หากไม่ใส่ ระบบจะใช้ Smart Regex NLP อัจฉริยะในตัวเครื่องโดยอัตโนมัติ (ฟรี & ออฟไลน์)</p>
         </div>
 
-        <div class="pt-2 border-t border-stone-100 flex items-center justify-between">
-          <span class="text-stone-600">พลังงานจำลอง (Energy)</span>
-          <button onclick="resetEnergy()" class="px-2.5 py-1 bg-jot-yellow-light text-jot-yellow-dark rounded-md font-semibold">เติมเต็ม 20 ⚡</button>
+        <div class="pt-3 border-t border-stone-800 flex items-center justify-between">
+          <div>
+            <p class="font-medium text-stone-200">เสียงพูดตอบกลับ (Thai Voice TTS)</p>
+            <p class="text-[10px] text-stone-500">อ่านสรุปข้อความที่บันทึกให้ฟังทางลำโพง</p>
+          </div>
+          <input type="checkbox" id="config-tts-toggle" checked onchange="toggleTTS(this.checked)" class="w-5 h-5 accent-brand-500 cursor-pointer" />
+        </div>
+
+        <div class="pt-3 border-t border-stone-800 flex items-center justify-between">
+          <div>
+            <p class="font-medium text-stone-200">สำรอง & กู้คืนข้อมูล (JSON Backup)</p>
+            <p class="text-[10px] text-stone-500">บันทึกข้อมูลทุกอย่างเก็บไว้ในมือถือ</p>
+          </div>
+          <button onclick="exportBackupData()" class="px-3 py-1.5 bg-stone-800 hover:bg-stone-700 text-stone-200 rounded-lg active:scale-95 transition font-mono text-[11px]">
+            ดาวน์โหลด
+          </button>
         </div>
       </div>
 
-      <button onclick="saveSettings()" class="w-full mt-5 bg-jot-yellow hover:bg-jot-yellow-hover text-stone-900 font-semibold py-2.5 rounded-xl transition">
+      <button onclick="saveSettingsConfig()" class="w-full mt-6 bg-gradient-to-r from-brand-500 to-amber-400 text-stone-950 font-bold py-3 rounded-2xl active:scale-98 transition shadow-glow-amber">
         บันทึกการตั้งค่า
       </button>
     </div>
   </div>
 
-  <!-- Help Modal -->
-  <div id="help-modal" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl w-full max-w-sm p-5 shadow-2xl border border-stone-200 text-xs">
-      <div class="flex justify-between items-center mb-3">
-        <h3 class="text-base font-bold text-stone-900">💡 วิธีสั่งงานเลขา</h3>
-        <button onclick="closeHelpModal()" class="text-stone-400 hover:text-stone-600 text-lg">&times;</button>
-      </div>
-      <div class="space-y-2.5 text-stone-600 leading-relaxed">
-        <p>คุณสามารถสั่งงานเหมือนคุยกับเลขาส่วนตัวจริงได้เลยครับ:</p>
-        <div class="p-2.5 bg-jot-bg rounded-xl space-y-1.5 border border-stone-200/60">
-          <p class="font-medium text-stone-800">📌 บันทึกนัดหมาย:</p>
-          <p class="text-stone-600">"พรุ่งนี้บ่าย 2 มีนัดตรวจฟันที่ รพ.กรุงเทพ"</p>
-        </div>
-        <div class="p-2.5 bg-jot-bg rounded-xl space-y-1.5 border border-stone-200/60">
-          <p class="font-medium text-stone-800">📌 บันทึกงาน / กำหนดส่ง:</p>
-          <p class="text-stone-600">"เดดไลน์ทำระบบไฟบ่อปลา วันที่ 20 นี้"</p>
-        </div>
-        <div class="p-2.5 bg-jot-bg rounded-xl space-y-1.5 border border-stone-200/60">
-          <p class="font-medium text-stone-800">🎙️ การสั่งด้วยเสียง:</p>
-          <p class="text-stone-600">กดที่รูปไมโครโฟน พูดประโยคที่ต้องการ แล้วกดส่งได้เลย</p>
-        </div>
-      </div>
-      <button onclick="closeHelpModal()" class="w-full mt-4 bg-stone-100 hover:bg-stone-200 text-stone-800 font-medium py-2 rounded-xl transition">
-        เข้าใจแล้ว
-      </button>
-    </div>
-  </div>
-
-  <!-- ================= JAVASCRIPT APP LOGIC ================= -->
+  <!-- ==============================================
+       JAVASCRIPT ARCHITECTURE & ENGINE LOGIC
+       ============================================== -->
   <script>
-    // App State Management
-    let appState = {
-      energy: parseInt(localStorage.getItem('jotwai_energy') || '19'),
-      username: localStorage.getItem('jotwai_username') || 'คุณผู้ใช้',
-      apiKey: localStorage.getItem('jotwai_gemini_key') || '',
-      events: JSON.parse(localStorage.getItem('jotwai_events') || '[]'),
-      tasks: JSON.parse(localStorage.getItem('jotwai_tasks') || '[]'),
+    // System Master State
+    const AppDB = {
+      username: localStorage.getItem('jw_user') || 'คุณเดียร์',
+      apiKey: localStorage.getItem('jw_gemini_key') || '',
+      energy: parseInt(localStorage.getItem('jw_energy') || '100'),
+      ttsEnabled: localStorage.getItem('jw_tts') !== 'false',
+      events: JSON.parse(localStorage.getItem('jw_events') || '[]'),
+      tasks: JSON.parse(localStorage.getItem('jw_tasks') || '[]'),
+      ledger: JSON.parse(localStorage.getItem('jw_ledger') || '[]'),
+      taskFilter: 'all',
       isRecording: false
     };
 
-    // Initialize on page load
+    // System Startup
     document.addEventListener('DOMContentLoaded', () => {
-      updateClock();
-      setInterval(updateClock, 1000);
-      document.getElementById('energy-count').innerText = appState.energy;
-      document.getElementById('setting-username').value = appState.username;
-      document.getElementById('setting-api-key').value = appState.apiKey;
-      renderEvents();
-      renderTasks();
+      initClock();
+      document.getElementById('config-username').value = AppDB.username;
+      document.getElementById('config-api-key').value = AppDB.apiKey;
+      document.getElementById('config-tts-toggle').checked = AppDB.ttsEnabled;
+      document.getElementById('user-greeting').innerText = `เลขาประจำตัว: ${AppDB.username}`;
+      document.getElementById('tts-status-label').innerText = AppDB.ttsEnabled ? 'TTS ON' : 'TTS OFF';
+      
+      renderAllViews();
     });
 
-    // Realtime iOS Clock
-    function updateClock() {
-      const now = new Date();
-      const hrs = String(now.getHours()).padStart(2, '0');
-      const mins = String(now.getMinutes()).padStart(2, '0');
-      const clockEl = document.getElementById('device-time');
-      if (clockEl) clockEl.innerText = `${hrs}:${mins}`;
+    // Realtime Pro Clock
+    function initClock() {
+      const update = () => {
+        const d = new Date();
+        const clock = document.getElementById('sys-clock');
+        if (clock) {
+          clock.innerText = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+        }
+      };
+      update();
+      setInterval(update, 1000);
     }
 
-    // Tab Navigation Switcher
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
+    // Tab View Controller
+    function switchTab(viewId) {
+      haptic(15);
+      document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
+      const target = document.getElementById(viewId);
+      if (target) target.classList.add('active');
 
       const tabs = {
-        'tab-chat': 'nav-btn-chat',
-        'tab-calendar': 'nav-btn-calendar',
-        'tab-tasks': 'nav-btn-tasks'
+        'view-chat': 'tab-btn-chat',
+        'view-calendar': 'tab-btn-calendar',
+        'view-tasks': 'tab-btn-tasks',
+        'view-ledger': 'tab-btn-ledger'
       };
 
       Object.keys(tabs).forEach(id => {
         const btn = document.getElementById(tabs[id]);
-        if (id === tabId) {
-          btn.classList.add('text-jot-yellow-dark');
+        if (id === viewId) {
+          btn.classList.add('text-brand-400');
           btn.classList.remove('text-stone-400');
         } else {
-          btn.classList.remove('text-jot-yellow-dark');
+          btn.classList.remove('text-brand-400');
           btn.classList.add('text-stone-400');
         }
       });
     }
 
-    // Quick Prompt Trigger
+    // Dynamic Island Toast Dispatcher
+    function notifyIsland(msg, icon = '⚡', tag = 'SYS') {
+      const toast = document.getElementById('toast-island');
+      document.getElementById('toast-msg').innerText = msg;
+      document.getElementById('toast-icon').innerText = icon;
+      document.getElementById('toast-tag').innerText = tag;
+
+      toast.classList.remove('-translate-y-12', 'opacity-0', 'scale-95');
+      toast.classList.add('translate-y-0', 'opacity-100', 'scale-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100', 'scale-100');
+        toast.classList.add('-translate-y-12', 'opacity-0', 'scale-95');
+      }, 2600);
+    }
+
+    // Haptic Feedback Engine
+    function haptic(ms = 15) {
+      if ('vibrate' in navigator) {
+        try { navigator.vibrate(ms); } catch (e) {}
+      }
+    }
+
+    // Input Box Auto Expand
+    function autoResizeTextarea(textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = Math.min(textarea.scrollHeight, 100) + 'px';
+    }
+
+    function handleKeySubmit(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleChatSubmit(e);
+      }
+    }
+
     function sendQuickPrompt(text) {
       const input = document.getElementById('chat-input');
       input.value = text;
+      autoResizeTextarea(input);
       handleChatSubmit(new Event('submit'));
     }
 
-    // Handle User Message Submission
+    // ==========================================
+    // CORE AI DISPATCHER & INTENT PARSER ENGINE
+    // ==========================================
     async function handleChatSubmit(e) {
       if (e) e.preventDefault();
       const input = document.getElementById('chat-input');
-      const message = input.value.trim();
-      if (!message) return;
+      const text = input.value.trim();
+      if (!text) return;
 
+      haptic(25);
       input.value = '';
+      autoResizeTextarea(input);
 
-      // Deduct Energy
-      if (appState.energy > 0) {
-        appState.energy--;
-        localStorage.setItem('jotwai_energy', appState.energy);
-        document.getElementById('energy-count').innerText = appState.energy;
-      }
+      // Render User Bubble
+      renderUserBubble(text);
 
-      // 1. Render User Message
-      renderUserMessage(message);
+      // Typing state
+      const typingId = renderTypingBubble();
 
-      // 2. Render Thinking Placeholder
-      const typingId = renderTypingIndicator();
-
-      // 3. Process AI Decision (Offline NLP parser or Gemini API)
+      // Dispatch AI Processing
       setTimeout(async () => {
-        removeTypingIndicator(typingId);
-        await processAssistantResponse(message);
-      }, 700);
+        removeTypingBubble(typingId);
+        await processExecutiveIntent(text);
+      }, 500);
     }
 
-    // Render User Chat Bubble
-    function renderUserMessage(text) {
-      const chat = document.getElementById('chat-messages');
-      const bubble = document.createElement('div');
-      bubble.className = "flex justify-end";
-      bubble.innerHTML = `
-        <div class="bg-jot-yellow text-stone-900 rounded-2xl rounded-tr-xs px-4 py-2.5 shadow-bubble max-w-[85%] text-xs sm:text-sm font-medium leading-relaxed">
+    function renderUserBubble(text) {
+      const scroller = document.getElementById('chat-scroller');
+      const wrap = document.createElement('div');
+      wrap.className = "flex justify-end";
+      wrap.innerHTML = `
+        <div class="bg-gradient-to-r from-brand-500 to-amber-400 text-stone-950 font-medium rounded-2xl rounded-tr-2xs px-4 py-2.5 max-w-[85%] text-xs sm:text-sm shadow-md leading-relaxed">
           ${escapeHtml(text)}
         </div>
       `;
-      chat.appendChild(bubble);
-      scrollChatToBottom();
+      scroller.appendChild(wrap);
+      scrollChatBottom();
     }
 
-    // Render Typing Dot Indicator
-    function renderTypingIndicator() {
-      const chat = document.getElementById('chat-messages');
+    function renderTypingBubble() {
+      const scroller = document.getElementById('chat-scroller');
       const id = 'typing-' + Date.now();
-      const bubble = document.createElement('div');
-      bubble.id = id;
-      bubble.className = "flex items-start space-x-2";
-      bubble.innerHTML = `
-        <div class="w-8 h-8 rounded-full bg-jot-yellow text-stone-900 font-bold flex items-center justify-center text-xs shrink-0">
-          AI
-        </div>
-        <div class="bg-white border border-stone-200/80 rounded-2xl rounded-tl-xs px-4 py-3 shadow-bubble text-stone-400 text-xs flex space-x-1 items-center">
-          <div class="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce"></div>
-          <div class="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce [animation-delay:0.2s]"></div>
-          <div class="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+      const wrap = document.createElement('div');
+      wrap.id = id;
+      wrap.className = "flex items-start space-x-2";
+      wrap.innerHTML = `
+        <div class="w-8 h-8 rounded-xl bg-surface-card border border-stone-800 text-brand-400 font-bold flex items-center justify-center text-xs shrink-0">AI</div>
+        <div class="bg-surface-card border border-stone-800 rounded-2xl rounded-tl-2xs px-4 py-3 text-stone-400 flex space-x-1.5 items-center">
+          <span class="w-1.5 h-1.5 bg-brand-400 rounded-full animate-bounce"></span>
+          <span class="w-1.5 h-1.5 bg-brand-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+          <span class="w-1.5 h-1.5 bg-brand-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
         </div>
       `;
-      chat.appendChild(bubble);
-      scrollChatToBottom();
+      scroller.appendChild(wrap);
+      scrollChatBottom();
       return id;
     }
 
-    function removeTypingIndicator(id) {
+    function removeTypingBubble(id) {
       const el = document.getElementById(id);
       if (el) el.remove();
     }
 
-    // Smart Thai Natural Language Parsing
-    async function processAssistantResponse(userInput) {
-      // Extraction logic
-      let hasEvent = false;
-      let hasTask = false;
-      let eventData = null;
-      let taskData = null;
+    // High-Precision NLP Parser for Thai Executive Commands
+    async function processExecutiveIntent(inputText) {
+      let eventPayload = null;
+      let taskPayload = null;
+      let ledgerPayload = null;
+      let aiSummarySpeech = "";
 
-      // Extract Time pattern (เช่น 09:30, 14:00, บ่าย 2, 10 โมง)
-      let timeMatch = userInput.match(/(\d{1,2}[:.]\d{2})|((บ่าย|เช้า|ตอน)?\s*(\d{1,2})\s*(โมง|น\.|นาฬิกา))/i);
-      let detectedTime = timeMatch ? timeMatch[0] : null;
+      // 1. Financial Ledger Detection (จ่าย, โอน, รับเงิน, ซื้อ, ขาย)
+      const moneyMatch = inputText.match(/(\d{1,3}(?:,\d{3})*|\d+)\s*(?:บาท|บ\.|฿)/i) || inputText.match(/(?:จ่าย|โอน|รับ|ซื้อ|ขาย|ได้)\D*?(\d{2,7})/i);
+      if (moneyMatch && (inputText.includes("จ่าย") || inputText.includes("ซื้อ") || inputText.includes("โอน") || inputText.includes("รับ") || inputText.includes("ขาย"))) {
+        const rawAmount = moneyMatch[1] ? moneyMatch[1].replace(/,/g, '') : "0";
+        const amount = parseFloat(rawAmount);
+        const isIncome = inputText.includes("รับ") || inputText.includes("ได้") || inputText.includes("ขาย");
 
-      // Extract Date pattern (เช่น สิ้นเดือน, วันที่ 20, พรุ่งนี้, 28-29)
-      let dateMatch = userInput.match(/(พรุ่งนี้|วันนี้|สิ้นเดือน|วันที่\s*\d{1,2}|\d{1,2}[-/]\d{1,2})/i);
-      let detectedDate = dateMatch ? dateMatch[0] : "วันนี้";
-
-      // Classify intent
-      if (detectedTime || userInput.includes("นัด") || userInput.includes("ไป") || userInput.includes("งาน")) {
-        hasEvent = true;
-        eventData = {
+        ledgerPayload = {
           id: Date.now(),
-          title: userInput.replace(/^(นัด|ไป|เตือน)/, '').trim(),
-          time: detectedTime || "ตามนัดหมาย",
-          date: detectedDate,
-          created: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })
+          title: inputText.replace(/(\d+)\s*(?:บาท|บ\.|฿)/g, '').trim(),
+          amount: amount,
+          type: isIncome ? 'income' : 'expense',
+          date: new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }),
+          time: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })
         };
-        appState.events.push(eventData);
-        localStorage.setItem('jotwai_events', JSON.stringify(appState.events));
-        renderEvents();
+        AppDB.ledger.push(ledgerPayload);
+        localStorage.setItem('jw_ledger', JSON.stringify(AppDB.ledger));
+        renderLedgerView();
       }
 
-      if (userInput.includes("เดดไลน์") || userInput.includes("ทำ") || userInput.includes("ส่ง") || userInput.includes("ซื้อ") || userInput.includes("คัดสำเนา")) {
-        hasTask = true;
-        taskData = {
+      // 2. Schedule Event Detection (มีเวลา, นัด, ไป, งาน)
+      const timeMatch = inputText.match(/(\d{1,2}[:.]\d{2})|((?:บ่าย|เช้า|ตอน)?\s*(\d{1,2})\s*(?:โมง|น\.|นาฬิกา))/i);
+      const dateMatch = inputText.match(/(พรุ่งนี้|วันนี้|มะรืนนี้|สิ้นเดือน|วันที่\s*\d{1,2}|\d{1,2}[-/]\d{1,2})/i);
+      
+      if (timeMatch || inputText.includes("นัด") || inputText.includes("ไปงาน") || inputText.includes("ประชุม")) {
+        const detectedTime = timeMatch ? timeMatch[0] : "09:00";
+        const detectedDate = dateMatch ? dateMatch[0] : "เร็วๆ นี้";
+
+        eventPayload = {
           id: Date.now() + 1,
-          title: userInput,
-          dueDate: detectedDate !== "วันนี้" ? detectedDate : "เร็วๆ นี้",
+          title: inputText.replace(/^(นัด|ไป|มีนัด|เตือน)/, '').trim(),
+          time: detectedTime,
+          date: detectedDate,
+          createdISO: new Date().toISOString()
+        };
+        AppDB.events.push(eventPayload);
+        localStorage.setItem('jw_events', JSON.stringify(AppDB.events));
+        renderEventsView();
+      }
+
+      // 3. To-Do Tasks Detection (เดดไลน์, ต้องทำ, ส่ง, รายงาน, งาน)
+      if (inputText.includes("เดดไลน์") || inputText.includes("ต้อง") || inputText.includes("ส่ง") || inputText.includes("อย่าลืม") || inputText.includes("ตามเรื่อง")) {
+        taskPayload = {
+          id: Date.now() + 2,
+          title: inputText.replace(/^(อย่าลืม|ต้อง|เดดไลน์)/, '').trim(),
+          priority: inputText.includes("ด่วน") || inputText.includes("เดดไลน์") ? 'HIGH' : 'NORMAL',
+          dueDate: dateMatch ? dateMatch[0] : 'ไม่ระบุ',
           done: false
         };
-        appState.tasks.push(taskData);
-        localStorage.setItem('jotwai_tasks', JSON.stringify(appState.tasks));
-        renderTasks();
+        AppDB.tasks.push(taskPayload);
+        localStorage.setItem('jw_tasks', JSON.stringify(AppDB.tasks));
+        renderTasksView();
       }
 
-      // Build Assistant Bubble response
-      const chat = document.getElementById('chat-messages');
+      // Construct Executive Assistant Response Bubble
+      let actionCardsHtml = '';
+      if (eventPayload) {
+        aiSummarySpeech += `ลงตารางนัดหมาย ${eventPayload.title} เรียบร้อยแล้วครับ `;
+        actionCardsHtml += `
+          <div class="mt-2.5 bg-brand-500/10 border border-brand-500/30 rounded-xl p-3 text-xs">
+            <div class="flex items-center justify-between text-brand-400 font-semibold mb-1">
+              <span class="flex items-center space-x-1"><span>📅</span><span>บันทึกลงตารางงาน</span></span>
+              <span class="font-mono bg-stone-900 px-2 py-0.5 rounded text-[10px] text-brand-300 border border-brand-500/20">${eventPayload.time}</span>
+            </div>
+            <p class="font-medium text-stone-100">${escapeHtml(eventPayload.title)}</p>
+            <div class="flex items-center justify-between mt-2 pt-2 border-t border-brand-500/20">
+              <span class="text-stone-400 text-[11px]">🗓️ ${eventPayload.date}</span>
+              <a href="${createGoogleCalendarUrl(eventPayload.title, eventPayload.date, eventPayload.time)}" target="_blank" 
+                class="text-[10px] text-brand-400 font-bold hover:underline flex items-center space-x-1">
+                <span>เปิดใน Google Calendar</span>
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"></path></svg>
+              </a>
+            </div>
+          </div>
+        `;
+      }
+
+      if (taskPayload) {
+        aiSummarySpeech += `บันทึกงาน ${taskPayload.title} ให้แล้วครับ `;
+        actionCardsHtml += `
+          <div class="mt-2.5 bg-stone-900 border border-stone-800 rounded-xl p-3 text-xs">
+            <div class="flex items-center justify-between font-semibold mb-1">
+              <span class="text-stone-300 flex items-center space-x-1"><span>📝</span><span>บันทึกภารกิจค้าง</span></span>
+              <span class="text-[9px] font-mono px-1.5 py-0.5 rounded ${taskPayload.priority === 'HIGH' ? 'bg-rose-500/20 text-rose-400' : 'bg-stone-800 text-stone-400'}">${taskPayload.priority}</span>
+            </div>
+            <p class="text-stone-200">${escapeHtml(taskPayload.title)}</p>
+            <p class="text-[10px] text-stone-500 mt-1">กำหนด: ${taskPayload.dueDate}</p>
+          </div>
+        `;
+      }
+
+      if (ledgerPayload) {
+        aiSummarySpeech += `ลงบัญชี ${ledgerPayload.type === 'income' ? 'รายรับ' : 'รายจ่าย'} ${ledgerPayload.amount} บาทเรียบร้อยครับ `;
+        actionCardsHtml += `
+          <div class="mt-2.5 bg-stone-900 border border-stone-800 rounded-xl p-3 text-xs">
+            <div class="flex items-center justify-between font-semibold mb-1">
+              <span class="${ledgerPayload.type === 'income' ? 'text-emerald-400' : 'text-rose-400'}">
+                ${ledgerPayload.type === 'income' ? '📈 รายรับใหม่' : '📉 รายจ่ายใหม่'}
+              </span>
+              <span class="font-mono text-sm font-bold ${ledgerPayload.type === 'income' ? 'text-emerald-400' : 'text-rose-400'}">
+                ${ledgerPayload.type === 'income' ? '+' : '-'}฿${ledgerPayload.amount.toLocaleString()}
+              </span>
+            </div>
+            <p class="text-stone-300">${escapeHtml(ledgerPayload.title)}</p>
+          </div>
+        `;
+      }
+
+      if (!eventPayload && !taskPayload && !ledgerPayload) {
+        aiSummarySpeech = "ผมจดจำข้อมูลที่คุณเดียร์บอกไว้ในระบบให้เรียบร้อยแล้วครับ";
+      }
+
+      // Render Assistant Output Bubble
+      const scroller = document.getElementById('chat-scroller');
       const bubble = document.createElement('div');
       bubble.className = "flex items-start space-x-2.5";
-
-      let actionHtml = '';
-      if (hasEvent) {
-        actionHtml += `
-          <div class="mt-2.5 bg-jot-yellow-light border border-jot-yellow/40 rounded-xl p-2.5 text-xs text-stone-800">
-            <div class="flex items-center justify-between text-jot-yellow-dark font-semibold mb-1">
-              <span>📅 ลงปฏิทินเรียบร้อย</span>
-              <span class="text-[10px] bg-white px-1.5 py-0.5 rounded">${eventData.time}</span>
-            </div>
-            <p class="font-medium text-stone-900">${escapeHtml(eventData.title)}</p>
-            <p class="text-[11px] text-stone-500 mt-0.5">🗓️ ${eventData.date}</p>
-          </div>
-        `;
-      }
-      if (hasTask) {
-        actionHtml += `
-          <div class="mt-2.5 bg-stone-50 border border-stone-200 rounded-xl p-2.5 text-xs text-stone-800">
-            <div class="flex items-center justify-between text-stone-600 font-semibold mb-1">
-              <span>📝 บันทึกงานค้าง</span>
-              <span class="text-[10px] bg-stone-200 px-1.5 py-0.5 rounded">${taskData.dueDate}</span>
-            </div>
-            <p class="text-stone-800">${escapeHtml(taskData.title)}</p>
-          </div>
-        `;
-      }
-
       bubble.innerHTML = `
-        <div class="w-8 h-8 rounded-full bg-jot-yellow text-stone-900 font-bold flex items-center justify-center text-xs shrink-0 shadow-xs">
-          AI
-        </div>
-        <div class="bg-white border border-stone-200/80 rounded-2xl rounded-tl-xs px-4 py-3 shadow-bubble max-w-[85%] text-xs sm:text-sm">
-          <p class="text-stone-800">จดไวจัดการให้เรียบร้อยแล้วครับ!</p>
-          ${actionHtml}
-          <p class="text-[10px] text-stone-400 mt-2 text-right">บันทึกลงระบบแล้ว</p>
+        <div class="w-8 h-8 rounded-xl bg-surface-card border border-stone-800 text-brand-400 font-bold flex items-center justify-center text-xs shrink-0 shadow-sm">AI</div>
+        <div class="bg-surface-card border border-stone-800/80 rounded-2xl rounded-tl-2xs px-4 py-3 text-stone-200 text-xs sm:text-sm max-w-[88%] shadow-glass">
+          <p class="text-stone-300 leading-relaxed">${aiSummarySpeech}</p>
+          ${actionCardsHtml}
+          <div class="flex items-center justify-between mt-2 pt-1.5 text-[10px] text-stone-500 border-t border-stone-800/80">
+            <span>JotWai Execution Core</span>
+            <button onclick="speakThai('${escapeHtml(aiSummarySpeech)}')" class="hover:text-brand-400 flex items-center space-x-1">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+              <span>ฟังเสียง</span>
+            </button>
+          </div>
         </div>
       `;
+      scroller.appendChild(bubble);
+      scrollChatBottom();
+      notifyIsland("อัปเดตระบบเรียบร้อย", "✨", "DONE");
+      haptic(20);
 
-      chat.appendChild(bubble);
-      scrollChatToBottom();
+      if (AppDB.ttsEnabled) {
+        speakThai(aiSummarySpeech);
+      }
     }
 
-    // Render Event Tab List
-    function renderEvents() {
-      const container = document.getElementById('events-list');
-      const noEvents = document.getElementById('no-events');
-      if (!container) return;
+    // Google Calendar Direct Link Constructor
+    function createGoogleCalendarUrl(title, dateStr, timeStr) {
+      const now = new Date();
+      const yr = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const startStr = `${yr}${month}${day}T090000Z`;
+      const endStr = `${yr}${month}${day}T100000Z`;
+      return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${startStr}/${endStr}&details=${encodeURIComponent('สร้างผ่านเลขา JotWai Pro')}`;
+    }
 
-      container.innerHTML = '';
-      if (appState.events.length === 0) {
-        container.appendChild(noEvents);
-        noEvents.classList.remove('hidden');
+    // Apple/Universal .ICS Calendar Exporter
+    function exportICS(title, dateStr, timeStr) {
+      haptic(20);
+      const now = new Date();
+      const ics = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//JotWai Pro AI//TH",
+        "BEGIN:VEVENT",
+        `UID:${Date.now()}@jotwai.pro`,
+        `DTSTAMP:${now.toISOString().replace(/[-:]/g, "").split(".")[0]}Z`,
+        `DTSTART:${now.toISOString().replace(/[-:]/g, "").split(".")[0]}Z`,
+        `SUMMARY:${title}`,
+        `DESCRIPTION:นัดหมายบันทึกโดย JotWai Pro AI (${dateStr} ${timeStr})`,
+        "END:VEVENT",
+        "END:VCALENDAR"
+      ].join("\r\n");
+
+      const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = window.URL.createObjectURL(blob);
+      a.download = `event-${Date.now()}.ics`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      notifyIsland("ดาวน์โหลดไฟล์ปฏิทิน .ics แล้ว", "📅", "ICS");
+    }
+
+    // Render Calendar Timeline View
+    function renderEventsView() {
+      const stream = document.getElementById('events-stream');
+      const countPill = document.getElementById('events-count-pill');
+      if (!stream) return;
+
+      countPill.innerText = `${AppDB.events.length} รายการ`;
+      stream.innerHTML = '';
+
+      if (AppDB.events.length === 0) {
+        stream.innerHTML = `
+          <div class="h-64 flex flex-col items-center justify-center text-stone-500 text-center">
+            <span class="text-4xl mb-2">🗓️</span>
+            <p class="text-xs font-medium text-stone-400">ยังไม่มีนัดหมายในตาราง</p>
+            <p class="text-[11px] text-stone-600 mt-1">บอกเลขา เช่น "พรุ่งนี้ 10 โมงมีนัดประชุม"</p>
+          </div>
+        `;
         return;
       }
 
-      appState.events.slice().reverse().forEach(evt => {
-        const card = document.createElement('div');
-        card.className = "bg-white border border-stone-200/70 p-3.5 rounded-2xl shadow-xs flex items-start justify-between";
-        card.innerHTML = `
-          <div class="flex items-start space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-jot-yellow-light text-jot-yellow-dark flex flex-col items-center justify-center font-bold text-xs shrink-0">
+      AppDB.events.slice().reverse().forEach(evt => {
+        const item = document.createElement('div');
+        item.className = "bg-surface-card border border-stone-800 p-3.5 rounded-2xl flex items-center justify-between";
+        item.innerHTML = `
+          <div class="flex items-center space-x-3 min-w-0 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-brand-500/10 border border-brand-500/20 text-brand-400 flex flex-col items-center justify-center font-mono font-bold text-xs shrink-0">
               <span>${evt.time.slice(0, 5)}</span>
             </div>
-            <div>
-              <h4 class="text-xs sm:text-sm font-semibold text-stone-900 leading-snug">${escapeHtml(evt.title)}</h4>
-              <p class="text-[11px] text-stone-500 mt-1">🗓️ ${evt.date}</p>
+            <div class="min-w-0">
+              <h4 class="text-xs sm:text-sm font-semibold text-stone-100 truncate">${escapeHtml(evt.title)}</h4>
+              <p class="text-[11px] text-stone-400 mt-0.5">🗓️ ${evt.date}</p>
             </div>
           </div>
-          <button onclick="deleteEvent(${evt.id})" class="text-stone-300 hover:text-stone-500 text-sm ml-2">&times;</button>
+          <div class="flex items-center space-x-1 shrink-0">
+            <button onclick="exportICS('${escapeHtml(evt.title)}', '${evt.date}', '${evt.time}')" title="โหลดไฟล์ .ics" class="p-2 text-stone-400 hover:text-brand-400 active:scale-90 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            </button>
+            <button onclick="deleteEvent(${evt.id})" class="p-2 text-stone-500 hover:text-rose-400 active:scale-90 transition">&times;</button>
+          </div>
         `;
-        container.appendChild(card);
+        stream.appendChild(item);
       });
     }
 
-    // Render Task Tab List
-    function renderTasks() {
-      const container = document.getElementById('tasks-list');
-      const noTasks = document.getElementById('no-tasks');
-      if (!container) return;
+    // Render Tasks View
+    function renderTasksView() {
+      const stream = document.getElementById('tasks-stream');
+      const badge = document.getElementById('badge-tasks');
+      if (!stream) return;
 
-      container.innerHTML = '';
-      if (appState.tasks.length === 0) {
-        container.appendChild(noTasks);
-        noTasks.classList.remove('hidden');
+      const pending = AppDB.tasks.filter(t => !t.done).length;
+      if (pending > 0) {
+        badge.innerText = pending > 9 ? '9+' : pending;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+
+      stream.innerHTML = '';
+      let filtered = AppDB.tasks.slice().reverse();
+      if (AppDB.taskFilter === 'pending') filtered = filtered.filter(t => !t.done);
+      if (AppDB.taskFilter === 'completed') filtered = filtered.filter(t => t.done);
+
+      if (filtered.length === 0) {
+        stream.innerHTML = `
+          <div class="h-64 flex flex-col items-center justify-center text-stone-500 text-center">
+            <span class="text-4xl mb-2">📋</span>
+            <p class="text-xs font-medium text-stone-400">ไม่มีรายการค้างในหมวดหมู่นี้</p>
+          </div>
+        `;
         return;
       }
 
-      appState.tasks.slice().reverse().forEach(task => {
+      filtered.forEach(task => {
         const item = document.createElement('div');
-        item.className = `bg-white border border-stone-200/70 p-3 rounded-2xl shadow-2xs flex items-center justify-between transition ${task.done ? 'opacity-50' : ''}`;
+        item.className = `bg-surface-card border border-stone-800 p-3 rounded-2xl flex items-center justify-between transition-all ${task.done ? 'opacity-40' : ''}`;
         item.innerHTML = `
           <div class="flex items-center space-x-3 flex-1 min-w-0 pr-2">
-            <input type="checkbox" ${task.done ? 'checked' : ''} onchange="toggleTaskDone(${task.id})" class="w-4 h-4 rounded text-jot-yellow focus:ring-0 cursor-pointer accent-amber-400" />
-            <span class="text-xs sm:text-sm text-stone-800 truncate ${task.done ? 'line-through text-stone-400' : ''}">${escapeHtml(task.title)}</span>
+            <input type="checkbox" ${task.done ? 'checked' : ''} onchange="toggleTaskDone(${task.id})" 
+              class="w-4 h-4 rounded text-brand-500 focus:ring-0 cursor-pointer accent-amber-400" />
+            <span class="text-xs sm:text-sm text-stone-200 truncate ${task.done ? 'line-through text-stone-500' : ''}">${escapeHtml(task.title)}</span>
           </div>
-          <span class="text-[10px] bg-stone-100 text-stone-600 px-2 py-0.5 rounded-full shrink-0">${task.dueDate}</span>
+          <span class="text-[9px] font-mono px-2 py-0.5 rounded-full shrink-0 ${task.priority === 'HIGH' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' : 'bg-stone-800 text-stone-400'}">${task.dueDate}</span>
         `;
-        container.appendChild(item);
+        stream.appendChild(item);
       });
     }
 
-    // Speech-to-Text Feature (Web Speech API)
+    function filterTasks(type) {
+      AppDB.taskFilter = type;
+      ['all', 'pending', 'completed'].forEach(t => {
+        const btn = document.getElementById('filter-' + t);
+        if (t === type) {
+          btn.className = "px-3 py-1 rounded-full bg-brand-500 text-stone-950 font-bold transition";
+        } else {
+          btn.className = "px-3 py-1 rounded-full bg-surface-card text-stone-400 hover:text-white border border-stone-800 transition";
+        }
+      });
+      renderTasksView();
+    }
+
+    function toggleTaskDone(id) {
+      haptic(15);
+      const t = AppDB.tasks.find(x => x.id === id);
+      if (t) {
+        t.done = !t.done;
+        localStorage.setItem('jw_tasks', JSON.stringify(AppDB.tasks));
+        renderTasksView();
+      }
+    }
+
+    // Render Financial Ledger View
+    function renderLedgerView() {
+      const stream = document.getElementById('ledger-stream');
+      const incEl = document.getElementById('total-income');
+      const expEl = document.getElementById('total-expense');
+      if (!stream) return;
+
+      let totalInc = 0;
+      let totalExp = 0;
+      stream.innerHTML = '';
+
+      if (AppDB.ledger.length === 0) {
+        stream.innerHTML = `
+          <div class="h-52 flex flex-col items-center justify-center text-stone-500 text-center">
+            <span class="text-4xl mb-2">💸</span>
+            <p class="text-xs font-medium text-stone-400">ยังไม่มีบันทึกรายรับ-รายจ่าย</p>
+            <p class="text-[11px] text-stone-600 mt-1">ลองพิมพ์ เช่น "จ่ายค่ากาแฟ 80 บาท"</p>
+          </div>
+        `;
+        incEl.innerText = '฿0';
+        expEl.innerText = '฿0';
+        return;
+      }
+
+      AppDB.ledger.slice().reverse().forEach(entry => {
+        if (entry.type === 'income') totalInc += entry.amount;
+        else totalExp += entry.amount;
+
+        const card = document.createElement('div');
+        card.className = "bg-surface-card border border-stone-800 p-3 rounded-2xl flex items-center justify-between";
+        card.innerHTML = `
+          <div class="min-w-0 pr-2">
+            <p class="text-xs font-semibold text-stone-200 truncate">${escapeHtml(entry.title)}</p>
+            <p class="text-[10px] text-stone-500 font-mono mt-0.5">${entry.date} • ${entry.time}</p>
+          </div>
+          <span class="font-mono text-xs sm:text-sm font-bold ${entry.type === 'income' ? 'text-emerald-400' : 'text-rose-400'}">
+            ${entry.type === 'income' ? '+' : '-'}฿${entry.amount.toLocaleString()}
+          </span>
+        `;
+        stream.appendChild(card);
+      });
+
+      incEl.innerText = '฿' + totalInc.toLocaleString();
+      expEl.innerText = '฿' + totalExp.toLocaleString();
+    }
+
+    function renderAllViews() {
+      renderEventsView();
+      renderTasksView();
+      renderLedgerView();
+    }
+
+    // Delete Operations
+    function deleteEvent(id) {
+      AppDB.events = AppDB.events.filter(x => x.id !== id);
+      localStorage.setItem('jw_events', JSON.stringify(AppDB.events));
+      renderEventsView();
+      notifyIsland("ลบนัดหมายเรียบร้อย", "🗑️");
+    }
+
+    function clearAllEvents() {
+      if (confirm("ต้องการล้างตารางนัดหมายทั้งหมดหรือไม่?")) {
+        AppDB.events = [];
+        localStorage.setItem('jw_events', JSON.stringify([]));
+        renderEventsView();
+      }
+    }
+
+    function clearDoneTasks() {
+      AppDB.tasks = AppDB.tasks.filter(t => !t.done);
+      localStorage.setItem('jw_tasks', JSON.stringify(AppDB.tasks));
+      renderTasksView();
+      notifyIsland("ลบงานที่เสร็จสิ้นแล้ว", "🧹");
+    }
+
+    function clearAllLedger() {
+      if (confirm("ต้องการล้างข้อมูลรายรับ-รายจ่ายทั้งหมดหรือไม่?")) {
+        AppDB.ledger = [];
+        localStorage.setItem('jw_ledger', JSON.stringify([]));
+        renderLedgerView();
+      }
+    }
+
+    // ==========================================
+    // SPEECH RECOGNITION & TTS AUDIO ENGINE
+    // ==========================================
     let recognition = null;
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognition = new SpeechRecognition();
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SR();
       recognition.lang = 'th-TH';
       recognition.continuous = false;
       recognition.interimResults = false;
 
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
+      recognition.onresult = (ev) => {
+        const text = ev.results[0][0].transcript;
         const input = document.getElementById('chat-input');
-        input.value = transcript;
+        input.value = text;
+        autoResizeTextarea(input);
         stopVoiceRecording();
+        notifyIsland("ถอดเสียงสำเร็จแล้ว", "🎙️", "VOICE");
       };
 
-      recognition.onerror = () => {
-        stopVoiceRecording();
-      };
-
-      recognition.onend = () => {
-        stopVoiceRecording();
-      };
+      recognition.onerror = () => stopVoiceRecording();
+      recognition.onend = () => stopVoiceRecording();
     }
 
     function toggleVoiceInput() {
       if (!recognition) {
-        alert("เบราว์เซอร์นี้ไม่รองรับระบบสั่งงานด้วยเสียง แนะนำเปิดบน Chrome หรือ Safari บนมือถือครับ");
+        notifyIsland("เบราว์เซอร์ไม่รองรับ Speech Recognition", "⚠️");
         return;
       }
-
+      const overlay = document.getElementById('voice-overlay');
       const micBtn = document.getElementById('mic-btn');
-      if (!appState.isRecording) {
+
+      if (!AppDB.isRecording) {
         try {
           recognition.start();
-          appState.isRecording = true;
-          micBtn.classList.add('recording-pulse');
+          AppDB.isRecording = true;
+          overlay.classList.remove('hidden');
+          micBtn.classList.add('border-rose-500', 'text-rose-400');
+          haptic(35);
         } catch (e) {
           console.error(e);
         }
@@ -659,74 +1064,83 @@
     }
 
     function stopVoiceRecording() {
-      appState.isRecording = false;
+      AppDB.isRecording = false;
+      const overlay = document.getElementById('voice-overlay');
       const micBtn = document.getElementById('mic-btn');
-      if (micBtn) micBtn.classList.remove('recording-pulse');
+      if (overlay) overlay.classList.add('hidden');
+      if (micBtn) micBtn.classList.remove('border-rose-500', 'text-rose-400');
     }
 
-    // Task & Event Helpers
-    function toggleTaskDone(id) {
-      const t = appState.tasks.find(x => x.id === id);
-      if (t) {
-        t.done = !t.done;
-        localStorage.setItem('jotwai_tasks', JSON.stringify(appState.tasks));
-        renderTasks();
-      }
+    function speakThai(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'th-TH';
+      utterance.rate = 1.05;
+      window.speechSynthesis.speak(utterance);
     }
 
-    function deleteEvent(id) {
-      appState.events = appState.events.filter(x => x.id !== id);
-      localStorage.setItem('jotwai_events', JSON.stringify(appState.events));
-      renderEvents();
+    function toggleTTSActive() {
+      AppDB.ttsEnabled = !AppDB.ttsEnabled;
+      localStorage.setItem('jw_tts', AppDB.ttsEnabled);
+      document.getElementById('config-tts-toggle').checked = AppDB.ttsEnabled;
+      document.getElementById('tts-status-label').innerText = AppDB.ttsEnabled ? 'TTS ON' : 'TTS OFF';
+      notifyIsland(AppDB.ttsEnabled ? "เปิดเสียงสังเคราะห์ AI" : "ปิดเสียงสังเคราะห์ AI", "🔊");
     }
 
-    function clearAllEvents() {
-      if (confirm("ต้องการล้างนัดหมายทั้งหมดหรือไม่?")) {
-        appState.events = [];
-        localStorage.setItem('jotwai_events', JSON.stringify([]));
-        renderEvents();
-      }
+    function toggleTTS(flag) {
+      AppDB.ttsEnabled = flag;
+      localStorage.setItem('jw_tts', flag);
+      document.getElementById('tts-status-label').innerText = flag ? 'TTS ON' : 'TTS OFF';
     }
 
-    function clearCompletedTasks() {
-      appState.tasks = appState.tasks.filter(t => !t.done);
-      localStorage.setItem('jotwai_tasks', JSON.stringify(appState.tasks));
-      renderTasks();
+    // Sheet Modal Openers
+    function openBottomSheet(sheetId) {
+      haptic(15);
+      const sheet = document.getElementById(sheetId);
+      if (sheet) sheet.classList.remove('hidden-sheet');
     }
 
-    function scrollChatToBottom() {
-      const chat = document.getElementById('chat-messages');
-      chat.scrollTop = chat.scrollHeight;
+    function closeBottomSheet(sheetId) {
+      const sheet = document.getElementById(sheetId);
+      if (sheet) sheet.classList.add('hidden-sheet');
     }
 
-    function triggerImageMock() {
-      alert("รองรับการอัปโหลดสลิป/รูปภาพตารางนัดหมาย (สามารถเชื่อมกับ OCR หรือ Gemini Multimodal เพื่อถอดตัวหนังสือได้)");
+    function saveSettingsConfig() {
+      const u = document.getElementById('config-username').value.trim();
+      const k = document.getElementById('config-api-key').value.trim();
+      AppDB.username = u || 'คุณเดียร์';
+      AppDB.apiKey = k;
+      localStorage.setItem('jw_user', AppDB.username);
+      localStorage.setItem('jw_gemini_key', AppDB.apiKey);
+      document.getElementById('user-greeting').innerText = `เลขาประจำตัว: ${AppDB.username}`;
+      closeBottomSheet('sheet-settings');
+      notifyIsland("บันทึกการตั้งค่าเรียบร้อย", "⚙️", "SAVED");
     }
 
-    // Modal Handlers
-    function openSettingsModal() { document.getElementById('settings-modal').classList.remove('hidden'); }
-    function closeSettingsModal() { document.getElementById('settings-modal').classList.add('hidden'); }
-    function openHelpModal() { document.getElementById('help-modal').classList.remove('hidden'); }
-    function closeHelpModal() { document.getElementById('help-modal').classList.add('hidden'); }
-
-    function resetEnergy() {
-      appState.energy = 20;
-      localStorage.setItem('jotwai_energy', '20');
-      document.getElementById('energy-count').innerText = '20';
+    function exportBackupData() {
+      const backup = {
+        user: AppDB.username,
+        events: AppDB.events,
+        tasks: AppDB.tasks,
+        ledger: AppDB.ledger,
+        timestamp: new Date().toISOString()
+      };
+      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `jotwai-backup-${Date.now()}.json`;
+      a.click();
+      notifyIsland("ดาวน์โหลดไฟล์สำรองแล้ว", "💾");
     }
 
-    function saveSettings() {
-      const key = document.getElementById('setting-api-key').value.trim();
-      const user = document.getElementById('setting-username').value.trim();
-      appState.apiKey = key;
-      appState.username = user;
-      localStorage.setItem('jotwai_gemini_key', key);
-      localStorage.setItem('jotwai_username', user);
-      closeSettingsModal();
+    function scrollChatBottom() {
+      const el = document.getElementById('chat-scroller');
+      el.scrollTop = el.scrollHeight;
     }
 
     function escapeHtml(str) {
-      return str.replace(/[&<>"']/g, function(m) {
+      return String(str).replace(/[&<>"']/g, function(m) {
         return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
       });
     }
