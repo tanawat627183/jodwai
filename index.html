@@ -83,7 +83,6 @@
       transform: translateY(0);
     }
 
-    /* Sound visualizer wave */
     @keyframes soundWave {
       0%, 100% { height: 4px; }
       50% { height: 18px; }
@@ -93,7 +92,6 @@
     .sound-bar:nth-child(3) { animation-delay: 0.3s; }
     .sound-bar:nth-child(4) { animation-delay: 0.45s; }
 
-    /* Bottom Sheet Controller */
     .sheet-wrapper { transition: visibility 0.25s ease-out; }
     .sheet-backdrop { transition: opacity 0.25s ease-out; }
     .sheet-container { transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1); }
@@ -107,10 +105,10 @@
 </head>
 <body class="bg-surface-ground text-stone-100 font-sans antialiased h-full w-full flex flex-col justify-between overflow-hidden">
 
-  <!-- Main Responsive Wrapper (Full Width on mobile, Max-W on tablets/desktop) -->
+  <!-- Responsive Wrapper (Edge-to-Edge on Mobile) -->
   <div class="relative w-full max-w-md mx-auto h-full flex flex-col overflow-hidden sm:border-x sm:border-stone-800/80">
 
-    <!-- Top Toast Notification -->
+    <!-- Top Toast Notification Island -->
     <div id="toast-island" class="absolute top-2 left-1/2 -translate-x-1/2 z-50 w-[92%] pointer-events-none transition-all duration-300 transform -translate-y-12 opacity-0">
       <div class="bg-surface-card/95 backdrop-blur-xl border border-stone-700 px-3.5 py-2 rounded-2xl shadow-glow flex items-center justify-between text-xs text-stone-100 font-medium">
         <div class="flex items-center space-x-2 truncate">
@@ -121,7 +119,7 @@
       </div>
     </div>
 
-    <!-- Top Status Header (Fits safe area naturally) -->
+    <!-- Header Status Bar -->
     <header class="pt-[max(0.6rem,env(safe-area-inset-top))] px-4 pb-2 border-b border-stone-800/80 bg-surface-ground/95 backdrop-blur-md flex justify-between items-center shrink-0 z-30 select-none">
       <div class="flex flex-col">
         <span id="current-date-th" class="text-[11px] font-medium text-stone-400">จันทร์ 9 พ.ย. 2569</span>
@@ -132,71 +130,66 @@
       </div>
 
       <div class="flex items-center space-x-1.5">
-        <!-- AI Engine Status Badge -->
+        <!-- AI Mode Status -->
         <button onclick="openBottomSheet('sheet-settings')" title="เปลี่ยนโหมด AI หรือใส่ Key" class="flex items-center space-x-1.5 bg-surface-card border border-stone-800 px-2.5 py-1 rounded-full hover:border-brand-500/50 transition">
           <span id="ai-status-dot" class="w-2 h-2 rounded-full bg-stone-500"></span>
           <span id="ai-status-label" class="text-[10px] font-mono text-stone-300">Local NLP</span>
         </button>
 
-        <!-- PWA Install Button -->
+        <!-- Install PWA -->
         <button id="btn-pwa-install" onclick="triggerPWAInstall()" class="flex items-center space-x-1 bg-brand-500/10 hover:bg-brand-500/20 text-brand-400 border border-brand-500/30 px-2.5 py-1 rounded-full text-[11px] font-medium transition active:scale-95">
           <span>📲</span>
           <span>ติดตั้ง</span>
         </button>
 
-        <!-- Settings Button -->
+        <!-- Settings -->
         <button onclick="openBottomSheet('sheet-settings')" class="w-8 h-8 rounded-full bg-surface-card border border-stone-800 flex items-center justify-center text-stone-400 hover:text-white active:scale-90 transition">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"></path><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00-.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33-1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"></path></svg>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"></path><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00-.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"></path></svg>
         </button>
       </div>
     </header>
 
-    <!-- MAIN VIEWPORTS CONTAINER (Constrained via flex-1 min-h-0) -->
+    <!-- MAIN VIEWPORTS CONTAINER (Locked with min-h-0) -->
     <main class="flex-1 min-h-0 relative overflow-hidden flex flex-col">
 
-      <!-- ==============================================
-           TAB 1: แชทเลขา (CHAT)
-           ============================================== -->
+      <!-- ================= TAB 1: CHAT ================= -->
       <section id="view-chat" class="tab-view active flex-col h-full flex-1 min-h-0 overflow-hidden">
         
-        <!-- App Subheader -->
         <div class="px-4 py-1.5 flex items-center justify-between border-b border-stone-800/40 bg-surface-card/40 shrink-0">
           <div class="flex items-center space-x-2">
             <span class="w-5 h-5 rounded-md bg-brand-500 text-stone-950 flex items-center justify-center font-bold text-[11px]">ล</span>
             <span class="text-xs font-bold text-white tracking-tight">ระบบ เลขา</span>
             <span id="user-badge" class="text-[10px] text-stone-400 border-l border-stone-700 pl-2">คุณเดียร์</span>
           </div>
-          <button onclick="clearChatHistory()" class="text-[9px] text-stone-500 hover:text-stone-300 font-mono">ล้างแชท</button>
+          <button onclick="clearChatHistory()" class="text-[9px] text-stone-500 hover:text-stone-300 font-mono">ล้างประวัติแชท</button>
         </div>
 
-        <!-- Chat Stream Area (Hydrated from localStorage) -->
+        <!-- Chat Stream Area -->
         <div id="chat-scroller" class="flex-1 min-h-0 custom-scroll px-3.5 py-3 space-y-3">
-          
-          <!-- Quick Action Chips -->
+          <!-- Suggestion Chips -->
           <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 text-[11px] shrink-0 no-scrollbar">
-            <button onclick="sendQuickPrompt('พรุ่งนี้ 14:00 ไปส่งของที่ขนส่ง')" 
+            <button onclick="sendQuickPrompt('28-29 ไปงานสัมมนาต่างจังหวัด')" 
               class="shrink-0 bg-surface-card hover:bg-surface-cardHover border border-stone-800 text-stone-300 px-2.5 py-1 rounded-full transition active:scale-95">
-              📦 นัดส่งของ พรุ่งนี้ 14:00
+              🗓️ 28-29 ไปสัมมนา (ลง 2 วันติด)
             </button>
-            <button onclick="sendQuickPrompt('ตรวจเช็กระบบบอร์ดวงจร')" 
+            <button onclick="sendQuickPrompt('28-29 ธันวาคม ไปเที่ยวเชียงใหม่')" 
               class="shrink-0 bg-surface-card hover:bg-surface-cardHover border border-stone-800 text-stone-300 px-2.5 py-1 rounded-full transition active:scale-95">
-              ⚡ ตรวจบอร์ดวงจร (ไม่ระบุวันเวลา)
+              ❄️ 28-29 ธ.ค. ล่วงหน้า
             </button>
-            <button onclick="sendQuickPrompt('วันที่ 15 สรุปยอดขายสินค้า')" 
+            <button onclick="sendQuickPrompt('ตรวจเช็กระบบบ่อปลา')" 
               class="shrink-0 bg-surface-card hover:bg-surface-cardHover border border-stone-800 text-stone-300 px-2.5 py-1 rounded-full transition active:scale-95">
-              📊 สรุปยอดขาย วันที่ 15
+              ⚡ ไม่ระบุวันเวลา (ยึดเวลาปัจจุบัน)
             </button>
           </div>
 
-          <!-- Dynamic Chat Message List will be populated by JS -->
           <div id="chat-messages-container" class="space-y-3"></div>
         </div>
 
-        <!-- Sound Visualizer Bar -->
+        <!-- Voice Visualizer Wave -->
         <div id="voice-overlay" class="hidden px-4 py-1.5 bg-rose-950/40 border-t border-rose-500/30 flex items-center justify-between shrink-0">
           <div class="flex items-center space-x-2">
             <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
-            <span class="text-[11px] font-mono text-rose-300 font-medium">กำลังฟังเสียง...</span>
+            <span class="text-[11px] font-mono text-rose-300 font-medium">กำลังฟังเสียงพูด...</span>
           </div>
           <div class="flex items-center space-x-1 h-4">
             <div class="w-1 bg-rose-400 rounded-full sound-bar"></div>
@@ -207,17 +200,16 @@
           <button onclick="stopVoiceRecording()" class="text-[11px] text-stone-300 underline font-mono">เสร็จ</button>
         </div>
 
-        <!-- Bottom Chat Input Field -->
+        <!-- Bottom Input Bar -->
         <div class="px-3 py-2 bg-surface-ground shrink-0 border-t border-stone-900">
           <form id="chat-form" onsubmit="handleChatSubmit(event)" class="flex items-end space-x-1.5">
-            
             <button type="button" id="mic-btn" onclick="toggleVoiceInput()" title="กดเพื่อพูด" 
               class="w-9 h-9 rounded-xl bg-surface-card border border-stone-800 hover:border-brand-500/50 flex items-center justify-center text-stone-300 transition active:scale-90 shrink-0 mb-0.5">
               <svg id="mic-icon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
             </button>
 
             <div class="flex-1 bg-surface-card border border-stone-800 rounded-xl px-3 py-2 focus-within:border-brand-500/70 focus-within:ring-1 focus-within:ring-brand-500/20 transition flex items-center">
-              <textarea id="chat-input" rows="1" placeholder="บอกงานเลขา เช่น พรุ่งนี้ 10 โมง..." 
+              <textarea id="chat-input" rows="1" placeholder="พิมพ์บอกเลขา เช่น 28-29 ไปต่างจังหวัด..." 
                 oninput="autoResizeTextarea(this)"
                 onkeydown="handleKeySubmit(event)"
                 class="w-full bg-transparent resize-none text-xs text-stone-100 placeholder-stone-500 focus:outline-none max-h-20 leading-snug custom-scroll"></textarea>
@@ -230,12 +222,8 @@
         </div>
       </section>
 
-      <!-- ==============================================
-           TAB 2: ปฏิทินงาน (INTERACTIVE MONTH GRID)
-           ============================================== -->
+      <!-- ================= TAB 2: CALENDAR ================= -->
       <section id="view-calendar" class="tab-view flex-col h-full flex-1 min-h-0 overflow-hidden p-3 space-y-2">
-        
-        <!-- Controls -->
         <div class="flex items-center justify-between shrink-0">
           <div>
             <h2 id="calendar-month-year" class="text-sm font-bold text-white">พฤศจิกายน 2569</h2>
@@ -248,17 +236,13 @@
           </div>
         </div>
 
-        <!-- Day of Week Header -->
         <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-medium text-stone-500 shrink-0">
           <div>อา</div><div>จ</div><div>อ</div><div>พ</div><div>พฤ</div><div>ศ</div><div>ส</div>
         </div>
 
-        <!-- Month Grid Container -->
-        <div id="calendar-grid" class="grid grid-cols-7 gap-1 bg-surface-card/60 p-1.5 rounded-2xl border border-stone-800/80 shrink-0">
-          <!-- Calendar Days dynamically populated by JS -->
-        </div>
+        <!-- Month Calendar Grid -->
+        <div id="calendar-grid" class="grid grid-cols-7 gap-1 bg-surface-card/60 p-1.5 rounded-2xl border border-stone-800/80 shrink-0"></div>
 
-        <!-- Selected Date Header -->
         <div class="flex items-center justify-between shrink-0 pt-1">
           <div class="flex items-center space-x-1.5">
             <span class="w-1.5 h-1.5 rounded-full bg-brand-400"></span>
@@ -267,15 +251,11 @@
           <span id="selected-date-count" class="text-[9px] bg-stone-800 text-stone-400 px-1.5 py-0.5 rounded font-mono">0 รายการ</span>
         </div>
 
-        <!-- Selected Day's Events List -->
-        <div id="calendar-day-events" class="flex-1 min-h-0 custom-scroll space-y-1.5 pb-2">
-          <!-- Events list -->
-        </div>
+        <!-- Selected Day Events (with Delete Button) -->
+        <div id="calendar-day-events" class="flex-1 min-h-0 custom-scroll space-y-1.5 pb-2"></div>
       </section>
 
-      <!-- ==============================================
-           TAB 3: ภารกิจ (TASKS & CHECKLIST)
-           ============================================== -->
+      <!-- ================= TAB 3: TASKS ================= -->
       <section id="view-tasks" class="tab-view flex-col h-full flex-1 min-h-0 overflow-hidden p-3 space-y-2">
         <div class="flex items-center justify-between shrink-0">
           <div>
@@ -288,37 +268,29 @@
           <button onclick="clearDoneTasks()" class="text-[11px] text-stone-400 hover:text-stone-200 active:scale-95 transition">ล้างที่เช็กแล้ว</button>
         </div>
 
-        <!-- Task Filters -->
         <div class="flex items-center space-x-1.5 shrink-0 text-[11px]">
           <button onclick="filterTasks('all')" id="filter-all" class="px-2.5 py-0.5 rounded-full bg-brand-500 text-stone-950 font-bold transition">ทั้งหมด</button>
           <button onclick="filterTasks('pending')" id="filter-pending" class="px-2.5 py-0.5 rounded-full bg-surface-card text-stone-400 hover:text-white border border-stone-800 transition">รอดำเนินการ</button>
           <button onclick="filterTasks('completed')" id="filter-completed" class="px-2.5 py-0.5 rounded-full bg-surface-card text-stone-400 hover:text-white border border-stone-800 transition">เสร็จสิ้น</button>
         </div>
 
-        <!-- Tasks Scrollable List -->
-        <div id="tasks-stream" class="flex-1 min-h-0 custom-scroll space-y-1.5 pb-2">
-          <!-- Task list -->
-        </div>
+        <div id="tasks-stream" class="flex-1 min-h-0 custom-scroll space-y-1.5 pb-2"></div>
       </section>
 
     </main>
 
-    <!-- NATIVE 3-DOCK BOTTOM NAVIGATION (Aligned with Mobile Safe Area) -->
+    <!-- Bottom Navigation Bar -->
     <nav class="h-[max(3.6rem,calc(2.8rem+env(safe-area-inset-bottom)))] bg-surface-ground/95 backdrop-blur-lg border-t border-stone-800/80 px-6 pb-[env(safe-area-inset-bottom)] flex items-center justify-around shrink-0 z-30">
-      
-      <!-- Dock 1: Chat -->
       <button onclick="switchTab('view-chat')" id="tab-btn-chat" class="flex flex-col items-center space-y-0.5 text-brand-400 transition-all active:scale-90">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
         <span class="text-[10px] font-semibold tracking-tight">แชทเลขา</span>
       </button>
 
-      <!-- Dock 2: Calendar -->
       <button onclick="switchTab('view-calendar')" id="tab-btn-calendar" class="flex flex-col items-center space-y-0.5 text-stone-400 hover:text-stone-200 transition-all active:scale-90 relative">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
         <span class="text-[10px] font-medium tracking-tight">ปฏิทินงาน</span>
       </button>
 
-      <!-- Dock 3: Tasks -->
       <button onclick="switchTab('view-tasks')" id="tab-btn-tasks" class="flex flex-col items-center space-y-0.5 text-stone-400 hover:text-stone-200 transition-all active:scale-90 relative">
         <div class="relative">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
@@ -326,15 +298,13 @@
         </div>
         <span class="text-[10px] font-medium tracking-tight">ภารกิจ</span>
       </button>
-
     </nav>
   </div>
 
-  <!-- BOTTOM SHEET: SETTINGS -->
+  <!-- Bottom Sheet: Settings -->
   <div id="sheet-settings" class="sheet-wrapper fixed inset-0 z-50 hidden-sheet">
     <div class="sheet-backdrop fixed inset-0 bg-black/75 backdrop-blur-xs" onclick="closeBottomSheet('sheet-settings')"></div>
     <div class="sheet-container fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-surface-card rounded-t-[32px] p-5 shadow-2xl border-t border-stone-800 z-10 max-h-[85vh] overflow-y-auto">
-      
       <div class="w-10 h-1 bg-stone-700 rounded-full mx-auto mb-3"></div>
 
       <div class="flex justify-between items-center mb-4">
@@ -387,16 +357,30 @@
       <h4 class="text-sm font-bold text-white flex items-center space-x-1.5">
         <span>📲</span><span>วิธีติดตั้งบน iPhone/iPad</span>
       </h4>
-      <p>1. แตะที่ปุ่ม <b>แชร์ (Share)</b> <svg class="inline w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8m-4-6l-4-4m0 0L8 6m4-4v12"></path></svg> ที่แถบด้านล่าง Safari</p>
-      <p>2. เลื่อนลงมาแล้วเลือก <b>"เพิ่มไปยังหน้าจอโฮม" (Add to Home Screen)</b></p>
-      <p>3. แอพ <b>ระบบ เลขา</b> จะเปิดแบบเต็มจอเสมือนแอพแท้ทันที</p>
+      <p>1. แตะที่ปุ่ม <b>แชร์ (Share)</b> <svg class="inline w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8m-4-6l-4-4m0 0L8 6m4-4v12"></path></svg> ด้านล่าง Safari</p>
+      <p>2. เลือก <b>"เพิ่มไปยังหน้าจอโฮม" (Add to Home Screen)</b></p>
+      <p>3. คุณจะได้แอพ <b>ระบบ เลขา</b> ใช้งานแบบเต็มจอทันที</p>
       <button onclick="document.getElementById('modal-ios-pwa').classList.add('hidden')" class="w-full py-1.5 bg-stone-800 text-white rounded-xl font-medium mt-1">เข้าใจแล้ว</button>
     </div>
   </div>
 
-  <!-- APP ENGINE LOGIC & HYDRATION -->
+  <!-- JAVASCRIPT APP LOGIC -->
   <script>
-    // State Store with complete LocalStorage Hydration
+    const thaiMonthsList = [
+      { num: 1, name: "มกราคม", short: "ม.ค.", re: /(มกราคม|มกรา|ม\.ค\.)/i },
+      { num: 2, name: "กุมภาพันธ์", short: "ก.พ.", re: /(กุมภาพันธ์|กุมภา|ก\.พ\.)/i },
+      { num: 3, name: "มีนาคม", short: "มี.ค.", re: /(มีนาคม|มีนา|มี\.ค\.)/i },
+      { num: 4, name: "เมษายน", short: "เม.ย.", re: /(เมษายน|เมษา|เม\.ย\.)/i },
+      { num: 5, name: "พฤษภาคม", short: "พ.ค.", re: /(พฤษภาคม|พฤษภา|พ\.ค\.)/i },
+      { num: 6, name: "มิถุนายน", short: "มิ.ย.", re: /(มิถุนายน|มิถุนา|มิ\.ย\.)/i },
+      { num: 7, name: "กรกฎาคม", short: "ก.ค.", re: /(กรกฎาคม|กรกฎา|ก\.ค\.)/i },
+      { num: 8, name: "สิงหาคม", short: "ส.ค.", re: /(สิงหาคม|สิงหา|ส\.ค\.)/i },
+      { num: 9, name: "กันยายน", short: "ก.ย.", re: /(กันยายน|กันยา|ก\.ย\.)/i },
+      { num: 10, name: "ตุลาคม", short: "ต.ค.", re: /(ตุลาคม|ตุลา|ต\.ค\.)/i },
+      { num: 11, name: "พฤศจิกายน", short: "พ.ย.", re: /(พฤศจิกายน|พฤศจิกา|พ\.ย\.)/i },
+      { num: 12, name: "ธันวาคม", short: "ธ.ค.", re: /(ธันวาคม|ธันวา|ธ\.ค\.)/i }
+    ];
+
     const AppDB = {
       username: localStorage.getItem('jw_user') || 'คุณเดียร์',
       apiKey: localStorage.getItem('jw_gemini_key') || '',
@@ -410,7 +394,6 @@
       deferredPrompt: null
     };
 
-    // System Startup: Hydrate UI from LocalStorage
     document.addEventListener('DOMContentLoaded', () => {
       initLiveBangkokClock();
       document.getElementById('config-username').value = AppDB.username;
@@ -422,7 +405,6 @@
       renderCalendarGrid();
       renderTasksView();
 
-      // Check due appointments every 10 seconds
       setInterval(checkAndMigrateDueEvents, 10000);
       checkAndMigrateDueEvents();
 
@@ -434,7 +416,6 @@
       });
     });
 
-    // Helper: Bangkok Timezone Formatter
     function getBangkokDateParts(dateObj = new Date()) {
       const bkkFormatter = new Intl.DateTimeFormat('en-CA', {
         timeZone: 'Asia/Bangkok',
@@ -466,24 +447,20 @@
       const update = () => {
         const now = new Date();
         const bkk = getBangkokDateParts(now);
-
-        const thaiMonths = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
         const thaiDays = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
-        
         const dayOfWeek = thaiDays[now.getDay()];
         const thaiYear = bkk.year + 543;
         
         const dateEl = document.getElementById('current-date-th');
         const clockEl = document.getElementById('current-clock-th');
         
-        if (dateEl) dateEl.innerText = `${dayOfWeek} ${bkk.day} ${thaiMonths[bkk.month - 1]} ${thaiYear}`;
+        if (dateEl) dateEl.innerText = `${dayOfWeek} ${bkk.day} ${thaiMonthsList[bkk.month - 1].short} ${thaiYear}`;
         if (clockEl) clockEl.innerText = bkk.timeStr;
       };
       update();
       setInterval(update, 1000);
     }
 
-    // Tab Switcher
     function switchTab(viewId) {
       triggerHaptic(15);
       document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
@@ -551,23 +528,22 @@
     }
 
     // ==============================================
-    // CHAT & PERSISTENCE ENGINE
+    // CHAT & MESSAGE PERSISTENCE WITH DELETE BUTTON
     // ==============================================
     function renderChatHistory() {
       const container = document.getElementById('chat-messages-container');
       if (!container) return;
       container.innerHTML = '';
 
-      // If no messages stored yet, render initial greeting
       if (AppDB.chatHistory.length === 0) {
         AppDB.chatHistory.push({
           sender: 'assistant',
-          text: `สวัสดีครับคุณเดียร์ ระบบ เลขา พร้อมบันทึกงานแล้ว ✨ พิมพ์หรือกดไมค์สั่งงานได้ทันที หากไม่ได้ระบุเวลา ระบบจะตั้งค่าเวลาปัจจุบัน (เวลา กทม.) ให้อัตโนมัติครับ`
+          text: `สวัสดีครับคุณเดียร์ ระบบ เลขา พร้อมบันทึกงานแล้ว ✨ พิมพ์ช่วงวัน เช่น "28-29 ไปสัมมนา" ได้เลย ระบบจะแยกนัดหมายลงปฏิทินให้ครบทุกวันครับ`
         });
         localStorage.setItem('jw_chat_history', JSON.stringify(AppDB.chatHistory));
       }
 
-      AppDB.chatHistory.forEach(item => {
+      AppDB.chatHistory.forEach((item, msgIdx) => {
         if (item.sender === 'user') {
           const wrap = document.createElement('div');
           wrap.className = "flex justify-end";
@@ -581,17 +557,23 @@
           const bubble = document.createElement('div');
           bubble.className = "flex items-start space-x-2";
           let actionCard = '';
-          if (item.eventData) {
+          
+          if (item.createdEvents && item.createdEvents.length > 0) {
+            const dateListText = item.createdEvents.map(e => e.date).join(', ');
             actionCard = `
               <div class="mt-2 bg-brand-500/10 border border-brand-500/30 rounded-xl p-2.5 text-xs">
                 <div class="flex items-center justify-between text-brand-400 font-semibold mb-1">
-                  <span>📅 นัดหมายในระบบ</span>
-                  <span class="font-mono bg-stone-900 px-1.5 py-0.5 rounded text-[10px] text-brand-300 border border-brand-500/20">${item.eventData.time} น.</span>
+                  <span>📅 นัดหมายในระบบ (${item.createdEvents.length} วัน)</span>
+                  <span class="font-mono bg-stone-900 px-1.5 py-0.5 rounded text-[10px] text-brand-300 border border-brand-500/20">${item.createdEvents[0].time} น.</span>
                 </div>
-                <p class="font-medium text-stone-100">${escapeHtml(item.eventData.title)}</p>
+                <p class="font-medium text-stone-100">${escapeHtml(item.createdEvents[0].title)}</p>
                 <div class="flex items-center justify-between mt-1.5 pt-1.5 border-t border-brand-500/20 text-[10px] text-stone-400">
-                  <span>🗓️ วันที่: ${item.eventData.date}</span>
-                  <span class="text-brand-400/90">เวลา กทม.</span>
+                  <span class="truncate pr-1">🗓️ ${dateListText}</span>
+                  <button onclick="deleteBatchEvents([${item.createdEvents.map(e => e.id).join(',')}])" 
+                    class="text-rose-400 hover:text-rose-300 font-medium shrink-0 flex items-center space-x-0.5">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    <span>ลบนัดนี้</span>
+                  </button>
                 </div>
               </div>
             `;
@@ -620,7 +602,6 @@
       input.value = '';
       autoResizeTextarea(input);
 
-      // Save User Message to State & LocalStorage
       AppDB.chatHistory.push({ sender: 'user', text: text });
       localStorage.setItem('jw_chat_history', JSON.stringify(AppDB.chatHistory));
       renderChatHistory();
@@ -663,16 +644,20 @@
       if (el) el.remove();
     }
 
+    // ==============================================
+    // DATE EXTRACTION & PARSER (MONTHS & RANGES)
+    // ==============================================
     async function processWithGeminiAPI(promptText) {
       const bkk = getBangkokDateParts(new Date());
-      const sysInstruction = `You are "ระบบ เลขา", a personal executive assistant for Khun Dear in Thailand.
-Current Bangkok DateTime: ${bkk.dateStr} ${bkk.timeStr} (Timezone Asia/Bangkok, Year ${bkk.year}).
-Analyze user input and extract:
-1. title: clear task/event title.
-2. date: "YYYY-MM-DD". If user didn't specify date, default to current date: "${bkk.dateStr}".
-3. time: "HH:mm". If user didn't specify time, default to current time: "${bkk.timeStr}".
-Respond ONLY in JSON without markdown code blocks:
-{"title": "...", "date": "YYYY-MM-DD", "time": "HH:mm", "summary": "ข้อความตอบรับสั้นๆ"}`;
+      const sysInstruction = `You are "ระบบ เลขา", personal executive assistant in Thailand.
+Current Bangkok DateTime: ${bkk.dateStr} ${bkk.timeStr} (Timezone Asia/Bangkok, Year ${bkk.year}, Month ${bkk.month}).
+Task: Extract title, time, and ALL dates (as array of YYYY-MM-DD):
+1. If user gives a range like "28-29", include both/all dates in the "dates" array.
+2. If user specifies a month (e.g. ธันวา, มกรา), use that specified month (advance year if already passed).
+3. If user DOES NOT specify a month, default strictly to current month (${bkk.month}) and year (${bkk.year}).
+4. If no time is specified, default to current time: "${bkk.timeStr}".
+Return ONLY clean JSON without markdown:
+{"title": "...", "dates": ["YYYY-MM-DD", ...], "time": "HH:mm", "summary": "ข้อความตอบรับสั้นๆ"}`;
 
       try {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${AppDB.apiKey}`;
@@ -686,12 +671,12 @@ Respond ONLY in JSON without markdown code blocks:
           })
         });
 
-        if (!response.ok) throw new Error("API call failed");
+        if (!response.ok) throw new Error("API failed");
         const data = await response.json();
         const jsonText = data.candidates?.[0]?.content?.parts?.[0]?.text;
         return JSON.parse(jsonText);
       } catch (err) {
-        console.warn("Gemini API error, falling back to local NLP:", err);
+        console.warn("Gemini API fallback to local NLP:", err);
         return null;
       }
     }
@@ -699,6 +684,24 @@ Respond ONLY in JSON without markdown code blocks:
     function processWithLocalParser(inputText) {
       const bkk = getBangkokDateParts(new Date());
 
+      // 1. Detect Month (If not mentioned, use current Bangkok month)
+      let targetMonth = bkk.month;
+      let targetYear = bkk.year;
+      let monthSpecified = false;
+
+      for (const item of thaiMonthsList) {
+        if (item.re.test(inputText)) {
+          targetMonth = item.num;
+          monthSpecified = true;
+          // If specified month has already passed in this year, schedule for next year
+          if (targetMonth < bkk.month) {
+            targetYear = bkk.year + 1;
+          }
+          break;
+        }
+      }
+
+      // 2. Detect Time
       let time = bkk.timeStr;
       const timeMatch = inputText.match(/(\d{1,2}[:.]\d{2})|((?:บ่าย|เช้า|ตอน)?\s*(\d{1,2})\s*(?:โมง|น\.|นาฬิกา))/i);
       if (timeMatch) {
@@ -712,64 +715,127 @@ Respond ONLY in JSON without markdown code blocks:
         }
       }
 
-      let date = bkk.dateStr;
-      if (inputText.includes("พรุ่งนี้")) {
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        date = getBangkokDateParts(tomorrow).dateStr;
-      } else if (inputText.includes("มะรืน")) {
-        const d = new Date();
-        d.setDate(d.getDate() + 2);
-        date = getBangkokDateParts(d).dateStr;
-      } else {
-        const dayMatch = inputText.match(/วันที่\s*(\d{1,2})/);
-        if (dayMatch) {
-          const dNum = String(dayMatch[1]).padStart(2, '0');
-          date = `${bkk.year}-${String(bkk.month).padStart(2, '0')}-${dNum}`;
+      // 3. Detect Dates (Check Date Range e.g. "28-29", "28 - 29", "28 ถึง 29")
+      let dates = [];
+      const rangeMatch = inputText.match(/(?:วันที่\s*)?(\d{1,2})\s*(?:[-–—]|ถึง)\s*(\d{1,2})/);
+      
+      if (rangeMatch) {
+        const startDay = parseInt(rangeMatch[1]);
+        const endDay = parseInt(rangeMatch[2]);
+        if (startDay >= 1 && endDay <= 31 && startDay <= endDay && (endDay - startDay <= 31)) {
+          for (let d = startDay; d <= endDay; d++) {
+            dates.push(`${targetYear}-${String(targetMonth).padStart(2, '0')}-${String(d).padStart(2, '0')}`);
+          }
         }
       }
 
-      const cleanTitle = inputText.replace(/^(นัด|ไป|มีนัด|เตือน|อย่าลืม|ต้อง)/, '').trim();
+      // If not a range, check for single date
+      if (dates.length === 0) {
+        if (inputText.includes("พรุ่งนี้")) {
+          const tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          dates.push(getBangkokDateParts(tomorrow).dateStr);
+        } else if (inputText.includes("มะรืน")) {
+          const d = new Date();
+          d.setDate(d.getDate() + 2);
+          dates.push(getBangkokDateParts(d).dateStr);
+        } else {
+          const singleDayMatch = inputText.match(/(?:วันที่\s*)(\d{1,2})/);
+          if (singleDayMatch) {
+            const dayNum = parseInt(singleDayMatch[1]);
+            dates.push(`${targetYear}-${String(targetMonth).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`);
+          } else {
+            // Default to today if no date found
+            dates.push(`${targetYear}-${String(targetMonth).padStart(2, '0')}-${String(bkk.day).padStart(2, '0')}`);
+          }
+        }
+      }
+
+      const cleanTitle = inputText
+        .replace(/(?:วันที่\s*)?(\d{1,2})\s*(?:[-–—]|ถึง)\s*(\d{1,2})/g, '')
+        .replace(/(?:วันที่\s*)(\d{1,2})/g, '')
+        .replace(/^(นัด|ไป|มีนัด|เตือน|อย่าลืม|ต้อง)/, '')
+        .trim();
+
+      const summaryMonthName = thaiMonthsList[targetMonth - 1].short;
+      const summaryMsg = dates.length > 1
+        ? `บันทึกนัดหมาย "${cleanTitle || inputText}" ในวันที่ ${dates.map(d => d.slice(8)).join(', ')} ${summaryMonthName} (รวม ${dates.length} วัน) เรียบร้อยครับ`
+        : `บันทึกนัดหมาย "${cleanTitle || inputText}" วันที่ ${dates[0].slice(8)} ${summaryMonthName} เรียบร้อยครับ`;
 
       return {
         title: cleanTitle || inputText,
-        date: date,
+        dates: dates,
         time: time,
-        summary: `บันทึกนัดหมาย "${cleanTitle || inputText}" เรียบร้อยครับ`
+        summary: summaryMsg
       };
     }
 
     function applyAIResult(res) {
-      const newEvent = {
-        id: Date.now(),
-        title: res.title,
-        date: res.date,
-        time: res.time,
-        dateTimeISO: `${res.date}T${res.time}:00`,
-        migrated: false
-      };
+      const datesToRegister = (res.dates && res.dates.length > 0) ? res.dates : [res.date];
+      const createdEvents = [];
 
-      // 1. Save Event
-      AppDB.events.push(newEvent);
+      datesToRegister.forEach((dStr, idx) => {
+        const newEvent = {
+          id: Date.now() + idx,
+          title: res.title,
+          date: dStr,
+          time: res.time,
+          dateTimeISO: `${dStr}T${res.time}:00`,
+          migrated: false
+        };
+        AppDB.events.push(newEvent);
+        createdEvents.push(newEvent);
+      });
+
       localStorage.setItem('jw_events', JSON.stringify(AppDB.events));
 
-      // 2. Save Assistant Response in Chat History
       AppDB.chatHistory.push({
         sender: 'assistant',
         text: res.summary || 'บันทึกนัดหมายเรียบร้อยแล้วครับ',
-        eventData: newEvent
+        createdEvents: createdEvents
       });
       localStorage.setItem('jw_chat_history', JSON.stringify(AppDB.chatHistory));
 
-      // Check migration & update views
       checkAndMigrateDueEvents();
       renderChatHistory();
       renderCalendarGrid();
-      notifyIsland("บันทึกนัดหมายลงปฏิทินแล้ว", "📅");
+      notifyIsland(`บันทึกลงปฏิทินแล้ว (${createdEvents.length} วัน)`, "📅");
+    }
+
+    // ==============================================
+    // EVENT DELETION CONTROLLERS
+    // ==============================================
+    function deleteEvent(id) {
+      triggerHaptic(15);
+      AppDB.events = AppDB.events.filter(e => e.id !== id);
+      localStorage.setItem('jw_events', JSON.stringify(AppDB.events));
+      renderCalendarGrid();
+      renderChatHistory();
+      notifyIsland("ลบนัดหมายเรียบร้อยแล้ว", "🗑️");
+    }
+
+    function deleteBatchEvents(ids) {
+      triggerHaptic(15);
+      if (confirm(`ต้องการลบนัดหมายรายการนี้ทั้งหมด (${ids.length} รายการ) หรือไม่?`)) {
+        AppDB.events = AppDB.events.filter(e => !ids.includes(e.id));
+        localStorage.setItem('jw_events', JSON.stringify(AppDB.events));
+        
+        // Remove event reference from chat item
+        AppDB.chatHistory.forEach(item => {
+          if (item.createdEvents) {
+            item.createdEvents = item.createdEvents.filter(e => !ids.includes(e.id));
+          }
+        });
+        localStorage.setItem('jw_chat_history', JSON.stringify(AppDB.chatHistory));
+
+        renderCalendarGrid();
+        renderChatHistory();
+        notifyIsland("ลบชุดนัดหมายทั้งหมดแล้ว", "🗑️");
+      }
     }
 
     function clearChatHistory() {
-      if (confirm("ต้องการล้างประวัติการแชททั้งหมดหรือไม่? (นัดหมายในปฏิทินและภารกิจจะไม่หาย)")) {
+      if (confirm("ต้องการล้างประวัติการแชททั้งหมดหรือไม่? (นัดหมายในปฏิทินจะไม่หาย)")) {
         AppDB.chatHistory = [];
         localStorage.setItem('jw_chat_history', JSON.stringify([]));
         renderChatHistory();
@@ -777,9 +843,9 @@ Respond ONLY in JSON without markdown code blocks:
       }
     }
 
-    // ==========================================================
-    // AUTO-MIGRATION: WHEN DUE TIME ARRIVES -> MOVE TO TASKS
-    // ==========================================================
+    // ==============================================
+    // AUTO-MIGRATION: TIME DUE -> MOVE TO TASKS
+    // ==============================================
     function checkAndMigrateDueEvents() {
       const currentBKKISO = getBangkokDateISOString(new Date());
       let migratedAny = false;
@@ -812,7 +878,7 @@ Respond ONLY in JSON without markdown code blocks:
     }
 
     // ==============================================
-    // CALENDAR GRID CONTROLLER
+    // CALENDAR VIEW: MONTH GRID & DAY INSPECTOR
     // ==============================================
     function changeMonth(delta) {
       if (delta === 0) {
@@ -831,12 +897,7 @@ Respond ONLY in JSON without markdown code blocks:
       const year = AppDB.calCurrentDate.getFullYear();
       const month = AppDB.calCurrentDate.getMonth();
 
-      const thaiMonthsFull = [
-        "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
-        "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
-      ];
-      titleEl.innerText = `${thaiMonthsFull[month]} ${year + 543}`;
-
+      titleEl.innerText = `${thaiMonthsList[month].name} ${year + 543}`;
       grid.innerHTML = '';
 
       const firstDayIndex = new Date(year, month, 1).getDay();
@@ -875,7 +936,7 @@ Respond ONLY in JSON without markdown code blocks:
         cell.className = cellClass;
         cell.innerHTML = `
           <span>${day}</span>
-          ${hasEvents ? `<span class="w-1 h-1 rounded-full ${isSelected ? 'bg-stone-950' : 'bg-brand-400'} -mt-0.5"></span>` : ''}
+          ${hasEvents ? `<span class="w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-stone-950' : 'bg-brand-400'} -mt-0.5"></span>` : ''}
         `;
         grid.appendChild(cell);
       }
@@ -925,22 +986,16 @@ Respond ONLY in JSON without markdown code blocks:
               </p>
             </div>
           </div>
-          <button onclick="deleteEvent(${evt.id})" class="p-1.5 text-stone-500 hover:text-rose-400 text-sm">&times;</button>
+          <button onclick="deleteEvent(${evt.id})" title="ลบนัดหมายนี้" class="p-2 text-stone-500 hover:text-rose-400 active:scale-90 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+          </button>
         `;
         container.appendChild(card);
       });
     }
 
-    function deleteEvent(id) {
-      triggerHaptic(15);
-      AppDB.events = AppDB.events.filter(e => e.id !== id);
-      localStorage.setItem('jw_events', JSON.stringify(AppDB.events));
-      renderCalendarGrid();
-      notifyIsland("ลบนัดหมายแล้ว", "🗑️");
-    }
-
     // ==============================================
-    // TASKS CHECKLIST CONTROLLER
+    // TASKS CHECKLIST VIEW
     // ==============================================
     function renderTasksView() {
       const stream = document.getElementById('tasks-stream');
@@ -1029,7 +1084,9 @@ Respond ONLY in JSON without markdown code blocks:
       notifyIsland("ล้างงานที่เช็กแล้ว", "🧹");
     }
 
-    // Voice Input Only (Web Speech)
+    // ==============================================
+    // SPEECH RECOGNITION (VOICE INPUT ONLY)
+    // ==============================================
     let recognition = null;
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
