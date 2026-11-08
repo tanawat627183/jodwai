@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th" class="h-full overflow-hidden">
+<html lang="th" class="h-full w-full overflow-hidden">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -41,7 +41,6 @@
           },
           boxShadow: {
             'glow': '0 0 20px -3px rgba(245, 158, 11, 0.25)',
-            'glass': '0 8px 30px 0 rgba(0, 0, 0, 0.45)',
           }
         }
       }
@@ -59,6 +58,7 @@
     
     html, body {
       height: 100%;
+      height: 100dvh;
       width: 100%;
       overflow: hidden;
       position: fixed;
@@ -83,7 +83,7 @@
       transform: translateY(0);
     }
 
-    /* Sound Visualizer */
+    /* Sound visualizer wave */
     @keyframes soundWave {
       0%, 100% { height: 4px; }
       50% { height: 18px; }
@@ -93,7 +93,7 @@
     .sound-bar:nth-child(3) { animation-delay: 0.3s; }
     .sound-bar:nth-child(4) { animation-delay: 0.45s; }
 
-    /* Sheet animations */
+    /* Bottom Sheet Controller */
     .sheet-wrapper { transition: visibility 0.25s ease-out; }
     .sheet-backdrop { transition: opacity 0.25s ease-out; }
     .sheet-container { transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1); }
@@ -105,13 +105,13 @@
     .sheet-wrapper.hidden-sheet .sheet-container { transform: translateY(100%); }
   </style>
 </head>
-<body class="bg-black text-stone-100 font-sans antialiased h-full w-full flex items-center justify-center p-0 sm:p-4 select-none">
+<body class="bg-surface-ground text-stone-100 font-sans antialiased h-full w-full flex flex-col justify-between overflow-hidden">
 
-  <!-- Mobile Viewport Frame (Strict 100% Height Constraint) -->
-  <div class="relative w-full max-w-[430px] h-[100dvh] sm:h-[860px] bg-surface-ground sm:rounded-[42px] shadow-2xl overflow-hidden flex flex-col border border-stone-800/80">
+  <!-- Main Responsive Wrapper (Full Width on mobile, Max-W on tablets/desktop) -->
+  <div class="relative w-full max-w-md mx-auto h-full flex flex-col overflow-hidden sm:border-x sm:border-stone-800/80">
 
-    <!-- Toast Island Notification -->
-    <div id="toast-island" class="absolute top-3 left-1/2 -translate-x-1/2 z-50 w-[88%] max-w-[340px] pointer-events-none transition-all duration-300 transform -translate-y-12 opacity-0">
+    <!-- Top Toast Notification -->
+    <div id="toast-island" class="absolute top-2 left-1/2 -translate-x-1/2 z-50 w-[92%] pointer-events-none transition-all duration-300 transform -translate-y-12 opacity-0">
       <div class="bg-surface-card/95 backdrop-blur-xl border border-stone-700 px-3.5 py-2 rounded-2xl shadow-glow flex items-center justify-between text-xs text-stone-100 font-medium">
         <div class="flex items-center space-x-2 truncate">
           <span id="toast-icon">📌</span>
@@ -121,8 +121,8 @@
       </div>
     </div>
 
-    <!-- Top Status Header (Safe Area Handled) -->
-    <header class="pt-[max(0.6rem,env(safe-area-inset-top))] px-4 pb-2 border-b border-stone-800/60 bg-surface-ground/95 backdrop-blur-md flex justify-between items-center shrink-0 z-30 select-none">
+    <!-- Top Status Header (Fits safe area naturally) -->
+    <header class="pt-[max(0.6rem,env(safe-area-inset-top))] px-4 pb-2 border-b border-stone-800/80 bg-surface-ground/95 backdrop-blur-md flex justify-between items-center shrink-0 z-30 select-none">
       <div class="flex flex-col">
         <span id="current-date-th" class="text-[11px] font-medium text-stone-400">จันทร์ 9 พ.ย. 2569</span>
         <div class="flex items-center space-x-1.5 mt-0.5">
@@ -146,16 +146,16 @@
 
         <!-- Settings Button -->
         <button onclick="openBottomSheet('sheet-settings')" class="w-8 h-8 rounded-full bg-surface-card border border-stone-800 flex items-center justify-center text-stone-400 hover:text-white active:scale-90 transition">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"></path><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00-.33-1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"></path></svg>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"></path><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00-.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33-1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"></path></svg>
         </button>
       </div>
     </header>
 
-    <!-- MAIN VIEWPORTS CONTAINER (Locked with min-h-0) -->
+    <!-- MAIN VIEWPORTS CONTAINER (Constrained via flex-1 min-h-0) -->
     <main class="flex-1 min-h-0 relative overflow-hidden flex flex-col">
 
       <!-- ==============================================
-           TAB 1: แชทเลขา
+           TAB 1: แชทเลขา (CHAT)
            ============================================== -->
       <section id="view-chat" class="tab-view active flex-col h-full flex-1 min-h-0 overflow-hidden">
         
@@ -166,43 +166,33 @@
             <span class="text-xs font-bold text-white tracking-tight">ระบบ เลขา</span>
             <span id="user-badge" class="text-[10px] text-stone-400 border-l border-stone-700 pl-2">คุณเดียร์</span>
           </div>
-          <span class="text-[9px] text-stone-500 font-mono">พร้อมรับคำสั่ง</span>
+          <button onclick="clearChatHistory()" class="text-[9px] text-stone-500 hover:text-stone-300 font-mono">ล้างแชท</button>
         </div>
 
-        <!-- Scrollable Message List (Flex-1 + Min-h-0 prevents push-out) -->
+        <!-- Chat Stream Area (Hydrated from localStorage) -->
         <div id="chat-scroller" class="flex-1 min-h-0 custom-scroll px-3.5 py-3 space-y-3">
           
-          <!-- Chips -->
+          <!-- Quick Action Chips -->
           <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 text-[11px] shrink-0 no-scrollbar">
-            <button onclick="sendQuickPrompt('พรุ่งนี้ 14:00 ไปส่งปลากัดที่ไปรษณีย์')" 
+            <button onclick="sendQuickPrompt('พรุ่งนี้ 14:00 ไปส่งของที่ขนส่ง')" 
               class="shrink-0 bg-surface-card hover:bg-surface-cardHover border border-stone-800 text-stone-300 px-2.5 py-1 rounded-full transition active:scale-95">
-              📦 นัดส่งปลากัด พรุ่งนี้ 14:00
+              📦 นัดส่งของ พรุ่งนี้ 14:00
             </button>
-            <button onclick="sendQuickPrompt('ไปพบช่างตรวจมิเตอร์ไฟ')" 
+            <button onclick="sendQuickPrompt('ตรวจเช็กระบบบอร์ดวงจร')" 
               class="shrink-0 bg-surface-card hover:bg-surface-cardHover border border-stone-800 text-stone-300 px-2.5 py-1 rounded-full transition active:scale-95">
-              ⚡ พบช่างตรวจไฟ (ไม่ระบุวันเวลา)
+              ⚡ ตรวจบอร์ดวงจร (ไม่ระบุวันเวลา)
             </button>
-            <button onclick="sendQuickPrompt('วันที่ 15 สรุปยอดขายการ์ดตลาด')" 
+            <button onclick="sendQuickPrompt('วันที่ 15 สรุปยอดขายสินค้า')" 
               class="shrink-0 bg-surface-card hover:bg-surface-cardHover border border-stone-800 text-stone-300 px-2.5 py-1 rounded-full transition active:scale-95">
               📊 สรุปยอดขาย วันที่ 15
             </button>
           </div>
 
-          <!-- Welcome Bubble -->
-          <div class="flex items-start space-x-2">
-            <div class="w-7 h-7 rounded-lg bg-surface-card border border-stone-800 text-brand-400 font-bold flex items-center justify-center text-xs shrink-0">
-              ล
-            </div>
-            <div class="bg-surface-card border border-stone-800 rounded-2xl rounded-tl-xs px-3.5 py-2.5 text-stone-200 text-xs max-w-[88%] shadow-glass leading-relaxed">
-              <p class="font-medium text-white mb-1">สวัสดีครับคุณเดียร์ ระบบ เลขา พร้อมบันทึกงานแล้ว ✨</p>
-              <p class="text-stone-400 leading-relaxed text-[11px]">
-                พิมพ์หรือกดไมค์สั่งงานได้ทันที หากไม่ได้ระบุเวลา ระบบจะตั้งค่าเวลาปัจจุบัน (เวลา กทม.) ให้อัตโนมัติ และเมื่อถึงเวลานัด งานจะถูกย้ายไปที่ <b>"ภารกิจ"</b> เพื่อรอเช็กให้ครับ
-              </p>
-            </div>
-          </div>
+          <!-- Dynamic Chat Message List will be populated by JS -->
+          <div id="chat-messages-container" class="space-y-3"></div>
         </div>
 
-        <!-- Live Audio Wave Bar -->
+        <!-- Sound Visualizer Bar -->
         <div id="voice-overlay" class="hidden px-4 py-1.5 bg-rose-950/40 border-t border-rose-500/30 flex items-center justify-between shrink-0">
           <div class="flex items-center space-x-2">
             <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
@@ -217,7 +207,7 @@
           <button onclick="stopVoiceRecording()" class="text-[11px] text-stone-300 underline font-mono">เสร็จ</button>
         </div>
 
-        <!-- Chat Input Bar (Locked at bottom, no padding blowout) -->
+        <!-- Bottom Chat Input Field -->
         <div class="px-3 py-2 bg-surface-ground shrink-0 border-t border-stone-900">
           <form id="chat-form" onsubmit="handleChatSubmit(event)" class="flex items-end space-x-1.5">
             
@@ -241,7 +231,7 @@
       </section>
 
       <!-- ==============================================
-           TAB 2: ปฏิทินงาน
+           TAB 2: ปฏิทินงาน (INTERACTIVE MONTH GRID)
            ============================================== -->
       <section id="view-calendar" class="tab-view flex-col h-full flex-1 min-h-0 overflow-hidden p-3 space-y-2">
         
@@ -263,7 +253,7 @@
           <div>อา</div><div>จ</div><div>อ</div><div>พ</div><div>พฤ</div><div>ศ</div><div>ส</div>
         </div>
 
-        <!-- Compact Calendar Grid (Height bounded) -->
+        <!-- Month Grid Container -->
         <div id="calendar-grid" class="grid grid-cols-7 gap-1 bg-surface-card/60 p-1.5 rounded-2xl border border-stone-800/80 shrink-0">
           <!-- Calendar Days dynamically populated by JS -->
         </div>
@@ -277,14 +267,14 @@
           <span id="selected-date-count" class="text-[9px] bg-stone-800 text-stone-400 px-1.5 py-0.5 rounded font-mono">0 รายการ</span>
         </div>
 
-        <!-- Scrollable Day Events Container (Flex-1 + Min-h-0) -->
+        <!-- Selected Day's Events List -->
         <div id="calendar-day-events" class="flex-1 min-h-0 custom-scroll space-y-1.5 pb-2">
           <!-- Events list -->
         </div>
       </section>
 
       <!-- ==============================================
-           TAB 3: ภารกิจ (CHECKLIST)
+           TAB 3: ภารกิจ (TASKS & CHECKLIST)
            ============================================== -->
       <section id="view-tasks" class="tab-view flex-col h-full flex-1 min-h-0 overflow-hidden p-3 space-y-2">
         <div class="flex items-center justify-between shrink-0">
@@ -305,7 +295,7 @@
           <button onclick="filterTasks('completed')" id="filter-completed" class="px-2.5 py-0.5 rounded-full bg-surface-card text-stone-400 hover:text-white border border-stone-800 transition">เสร็จสิ้น</button>
         </div>
 
-        <!-- Scrollable Tasks List (Flex-1 + Min-h-0) -->
+        <!-- Tasks Scrollable List -->
         <div id="tasks-stream" class="flex-1 min-h-0 custom-scroll space-y-1.5 pb-2">
           <!-- Task list -->
         </div>
@@ -313,8 +303,8 @@
 
     </main>
 
-    <!-- NATIVE 3-DOCK BOTTOM NAVIGATION (Safe Area Bottom Handled) -->
-    <nav class="h-[max(3.75rem,calc(3rem+env(safe-area-inset-bottom)))] bg-surface-ground/95 backdrop-blur-lg border-t border-stone-800/80 px-6 pb-[env(safe-area-inset-bottom)] flex items-center justify-around shrink-0 z-30">
+    <!-- NATIVE 3-DOCK BOTTOM NAVIGATION (Aligned with Mobile Safe Area) -->
+    <nav class="h-[max(3.6rem,calc(2.8rem+env(safe-area-inset-bottom)))] bg-surface-ground/95 backdrop-blur-lg border-t border-stone-800/80 px-6 pb-[env(safe-area-inset-bottom)] flex items-center justify-around shrink-0 z-30">
       
       <!-- Dock 1: Chat -->
       <button onclick="switchTab('view-chat')" id="tab-btn-chat" class="flex flex-col items-center space-y-0.5 text-brand-400 transition-all active:scale-90">
@@ -343,7 +333,7 @@
   <!-- BOTTOM SHEET: SETTINGS -->
   <div id="sheet-settings" class="sheet-wrapper fixed inset-0 z-50 hidden-sheet">
     <div class="sheet-backdrop fixed inset-0 bg-black/75 backdrop-blur-xs" onclick="closeBottomSheet('sheet-settings')"></div>
-    <div class="sheet-container fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-surface-card rounded-t-[32px] p-5 shadow-2xl border-t border-stone-800 z-10 max-h-[85vh] overflow-y-auto">
+    <div class="sheet-container fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-surface-card rounded-t-[32px] p-5 shadow-2xl border-t border-stone-800 z-10 max-h-[85vh] overflow-y-auto">
       
       <div class="w-10 h-1 bg-stone-700 rounded-full mx-auto mb-3"></div>
 
@@ -373,7 +363,7 @@
         </div>
 
         <div class="pt-2 border-t border-stone-800">
-          <p class="font-medium text-stone-300 mb-1.5">จัดการข้อมูล</p>
+          <p class="font-medium text-stone-300 mb-1.5">จัดการข้อมูลระบบ</p>
           <div class="flex items-center space-x-2">
             <button onclick="exportBackupData()" class="flex-1 py-1.5 bg-stone-800 hover:bg-stone-700 text-stone-200 rounded-xl transition font-mono text-[10px]">
               📥 ส่งออกไฟล์สำรอง
@@ -404,20 +394,23 @@
     </div>
   </div>
 
-  <!-- APP ENGINE LOGIC -->
+  <!-- APP ENGINE LOGIC & HYDRATION -->
   <script>
+    // State Store with complete LocalStorage Hydration
     const AppDB = {
       username: localStorage.getItem('jw_user') || 'คุณเดียร์',
       apiKey: localStorage.getItem('jw_gemini_key') || '',
       events: JSON.parse(localStorage.getItem('jw_events') || '[]'),
       tasks: JSON.parse(localStorage.getItem('jw_tasks') || '[]'),
+      chatHistory: JSON.parse(localStorage.getItem('jw_chat_history') || '[]'),
       taskFilter: 'all',
       isRecording: false,
       calCurrentDate: new Date(),
-      calSelectedDateStr: getBangkokDateISOString(new Date()).slice(0, 10),
+      calSelectedDateStr: getBangkokDateParts(new Date()).dateStr,
       deferredPrompt: null
     };
 
+    // System Startup: Hydrate UI from LocalStorage
     document.addEventListener('DOMContentLoaded', () => {
       initLiveBangkokClock();
       document.getElementById('config-username').value = AppDB.username;
@@ -425,9 +418,11 @@
       document.getElementById('user-badge').innerText = AppDB.username;
       
       updateAIStatusBadge();
+      renderChatHistory();
       renderCalendarGrid();
       renderTasksView();
 
+      // Check due appointments every 10 seconds
       setInterval(checkAndMigrateDueEvents, 10000);
       checkAndMigrateDueEvents();
 
@@ -439,6 +434,7 @@
       });
     });
 
+    // Helper: Bangkok Timezone Formatter
     function getBangkokDateParts(dateObj = new Date()) {
       const bkkFormatter = new Intl.DateTimeFormat('en-CA', {
         timeZone: 'Asia/Bangkok',
@@ -487,6 +483,7 @@
       setInterval(update, 1000);
     }
 
+    // Tab Switcher
     function switchTab(viewId) {
       triggerHaptic(15);
       document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
@@ -553,6 +550,66 @@
       handleChatSubmit(new Event('submit'));
     }
 
+    // ==============================================
+    // CHAT & PERSISTENCE ENGINE
+    // ==============================================
+    function renderChatHistory() {
+      const container = document.getElementById('chat-messages-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      // If no messages stored yet, render initial greeting
+      if (AppDB.chatHistory.length === 0) {
+        AppDB.chatHistory.push({
+          sender: 'assistant',
+          text: `สวัสดีครับคุณเดียร์ ระบบ เลขา พร้อมบันทึกงานแล้ว ✨ พิมพ์หรือกดไมค์สั่งงานได้ทันที หากไม่ได้ระบุเวลา ระบบจะตั้งค่าเวลาปัจจุบัน (เวลา กทม.) ให้อัตโนมัติครับ`
+        });
+        localStorage.setItem('jw_chat_history', JSON.stringify(AppDB.chatHistory));
+      }
+
+      AppDB.chatHistory.forEach(item => {
+        if (item.sender === 'user') {
+          const wrap = document.createElement('div');
+          wrap.className = "flex justify-end";
+          wrap.innerHTML = `
+            <div class="bg-brand-500 text-stone-950 font-medium rounded-2xl rounded-tr-xs px-3.5 py-2 max-w-[85%] text-xs shadow-md leading-relaxed">
+              ${escapeHtml(item.text)}
+            </div>
+          `;
+          container.appendChild(wrap);
+        } else {
+          const bubble = document.createElement('div');
+          bubble.className = "flex items-start space-x-2";
+          let actionCard = '';
+          if (item.eventData) {
+            actionCard = `
+              <div class="mt-2 bg-brand-500/10 border border-brand-500/30 rounded-xl p-2.5 text-xs">
+                <div class="flex items-center justify-between text-brand-400 font-semibold mb-1">
+                  <span>📅 นัดหมายในระบบ</span>
+                  <span class="font-mono bg-stone-900 px-1.5 py-0.5 rounded text-[10px] text-brand-300 border border-brand-500/20">${item.eventData.time} น.</span>
+                </div>
+                <p class="font-medium text-stone-100">${escapeHtml(item.eventData.title)}</p>
+                <div class="flex items-center justify-between mt-1.5 pt-1.5 border-t border-brand-500/20 text-[10px] text-stone-400">
+                  <span>🗓️ วันที่: ${item.eventData.date}</span>
+                  <span class="text-brand-400/90">เวลา กทม.</span>
+                </div>
+              </div>
+            `;
+          }
+          bubble.innerHTML = `
+            <div class="w-7 h-7 rounded-lg bg-surface-card border border-stone-800 text-brand-400 font-bold flex items-center justify-center text-xs shrink-0">ล</div>
+            <div class="bg-surface-card border border-stone-800 rounded-2xl rounded-tl-xs px-3.5 py-2.5 text-stone-200 text-xs max-w-[88%] shadow-glass">
+              <p class="text-stone-300 leading-relaxed">${escapeHtml(item.text)}</p>
+              ${actionCard}
+            </div>
+          `;
+          container.appendChild(bubble);
+        }
+      });
+
+      scrollChatBottom();
+    }
+
     async function handleChatSubmit(e) {
       if (e) e.preventDefault();
       const input = document.getElementById('chat-input');
@@ -563,14 +620,17 @@
       input.value = '';
       autoResizeTextarea(input);
 
-      renderUserBubble(text);
+      // Save User Message to State & LocalStorage
+      AppDB.chatHistory.push({ sender: 'user', text: text });
+      localStorage.setItem('jw_chat_history', JSON.stringify(AppDB.chatHistory));
+      renderChatHistory();
+
       const typingId = renderTypingBubble();
 
       let result = null;
       if (AppDB.apiKey) {
         result = await processWithGeminiAPI(text);
       }
-
       if (!result) {
         result = processWithLocalParser(text);
       }
@@ -579,21 +639,8 @@
       applyAIResult(result);
     }
 
-    function renderUserBubble(text) {
-      const scroller = document.getElementById('chat-scroller');
-      const wrap = document.createElement('div');
-      wrap.className = "flex justify-end";
-      wrap.innerHTML = `
-        <div class="bg-brand-500 text-stone-950 font-medium rounded-2xl rounded-tr-xs px-3.5 py-2 max-w-[85%] text-xs shadow-md leading-relaxed">
-          ${escapeHtml(text)}
-        </div>
-      `;
-      scroller.appendChild(wrap);
-      scrollChatBottom();
-    }
-
     function renderTypingBubble() {
-      const scroller = document.getElementById('chat-scroller');
+      const container = document.getElementById('chat-messages-container');
       const id = 'typing-' + Date.now();
       const wrap = document.createElement('div');
       wrap.id = id;
@@ -606,7 +653,7 @@
           <span class="w-1.5 h-1.5 bg-brand-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
         </div>
       `;
-      scroller.appendChild(wrap);
+      container.appendChild(wrap);
       scrollChatBottom();
       return id;
     }
@@ -702,39 +749,37 @@ Respond ONLY in JSON without markdown code blocks:
         migrated: false
       };
 
+      // 1. Save Event
       AppDB.events.push(newEvent);
       localStorage.setItem('jw_events', JSON.stringify(AppDB.events));
 
+      // 2. Save Assistant Response in Chat History
+      AppDB.chatHistory.push({
+        sender: 'assistant',
+        text: res.summary || 'บันทึกนัดหมายเรียบร้อยแล้วครับ',
+        eventData: newEvent
+      });
+      localStorage.setItem('jw_chat_history', JSON.stringify(AppDB.chatHistory));
+
+      // Check migration & update views
       checkAndMigrateDueEvents();
-
-      const scroller = document.getElementById('chat-scroller');
-      const bubble = document.createElement('div');
-      bubble.className = "flex items-start space-x-2";
-      bubble.innerHTML = `
-        <div class="w-7 h-7 rounded-lg bg-surface-card border border-stone-800 text-brand-400 font-bold flex items-center justify-center text-xs shrink-0">ล</div>
-        <div class="bg-surface-card border border-stone-800 rounded-2xl rounded-tl-xs px-3.5 py-2.5 text-stone-200 text-xs max-w-[88%] shadow-glass">
-          <p class="text-stone-300 leading-relaxed">${escapeHtml(res.summary || 'บันทึกนัดหมายเรียบร้อยแล้วครับ')}</p>
-          
-          <div class="mt-2 bg-brand-500/10 border border-brand-500/30 rounded-xl p-2.5 text-xs">
-            <div class="flex items-center justify-between text-brand-400 font-semibold mb-1">
-              <span>📅 นัดหมายในระบบ</span>
-              <span class="font-mono bg-stone-900 px-1.5 py-0.5 rounded text-[10px] text-brand-300 border border-brand-500/20">${res.time} น.</span>
-            </div>
-            <p class="font-medium text-stone-100">${escapeHtml(res.title)}</p>
-            <div class="flex items-center justify-between mt-1.5 pt-1.5 border-t border-brand-500/20 text-[10px] text-stone-400">
-              <span>🗓️ วันที่: ${res.date}</span>
-              <span class="text-brand-400/90">เวลา กทม.</span>
-            </div>
-          </div>
-        </div>
-      `;
-      scroller.appendChild(bubble);
-      scrollChatBottom();
-
-      notifyIsland("บันทึกนัดหมายลงปฏิทินแล้ว", "📅");
+      renderChatHistory();
       renderCalendarGrid();
+      notifyIsland("บันทึกนัดหมายลงปฏิทินแล้ว", "📅");
     }
 
+    function clearChatHistory() {
+      if (confirm("ต้องการล้างประวัติการแชททั้งหมดหรือไม่? (นัดหมายในปฏิทินและภารกิจจะไม่หาย)")) {
+        AppDB.chatHistory = [];
+        localStorage.setItem('jw_chat_history', JSON.stringify([]));
+        renderChatHistory();
+        notifyIsland("ล้างประวัติแชทแล้ว", "🧹");
+      }
+    }
+
+    // ==========================================================
+    // AUTO-MIGRATION: WHEN DUE TIME ARRIVES -> MOVE TO TASKS
+    // ==========================================================
     function checkAndMigrateDueEvents() {
       const currentBKKISO = getBangkokDateISOString(new Date());
       let migratedAny = false;
@@ -766,6 +811,9 @@ Respond ONLY in JSON without markdown code blocks:
       }
     }
 
+    // ==============================================
+    // CALENDAR GRID CONTROLLER
+    // ==============================================
     function changeMonth(delta) {
       if (delta === 0) {
         AppDB.calCurrentDate = new Date();
@@ -891,6 +939,9 @@ Respond ONLY in JSON without markdown code blocks:
       notifyIsland("ลบนัดหมายแล้ว", "🗑️");
     }
 
+    // ==============================================
+    // TASKS CHECKLIST CONTROLLER
+    // ==============================================
     function renderTasksView() {
       const stream = document.getElementById('tasks-stream');
       const badge = document.getElementById('badge-tasks');
@@ -1097,6 +1148,7 @@ Respond ONLY in JSON without markdown code blocks:
         user: AppDB.username,
         events: AppDB.events,
         tasks: AppDB.tasks,
+        chatHistory: AppDB.chatHistory,
         exportedAt: new Date().toISOString()
       };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
