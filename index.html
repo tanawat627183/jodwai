@@ -168,17 +168,21 @@
         <div id="chat-scroller" class="flex-1 min-h-0 custom-scroll px-3.5 py-3 space-y-3">
           <!-- Suggestion Chips -->
           <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 text-[11px] shrink-0 no-scrollbar">
-            <button onclick="sendQuickPrompt('28-29 ไปงานสัมมนาต่างจังหวัด')" 
-              class="shrink-0 bg-surface-card hover:bg-surface-cardHover border border-stone-800 text-stone-300 px-2.5 py-1 rounded-full transition active:scale-95">
-              🗓️ 28-29 ไปสัมมนา (ลง 2 วันติด)
+            <button onclick="sendQuickPrompt('วันนี้มีงานไรบ้าง')" 
+              class="shrink-0 bg-brand-500/10 hover:bg-brand-500/20 border border-brand-500/30 text-brand-400 px-2.5 py-1 rounded-full transition active:scale-95 font-medium">
+              🔍 วันนี้มีงานไรบ้าง
             </button>
-            <button onclick="sendQuickPrompt('28-29 ธันวาคม ไปเที่ยวเชียงใหม่')" 
+            <button onclick="sendQuickPrompt('พรุ่งนี้มีอะไรบ้าง')" 
               class="shrink-0 bg-surface-card hover:bg-surface-cardHover border border-stone-800 text-stone-300 px-2.5 py-1 rounded-full transition active:scale-95">
-              ❄️ 28-29 ธ.ค. ล่วงหน้า
+              📅 พรุ่งนี้มีอะไรบ้าง
             </button>
-            <button onclick="sendQuickPrompt('ตรวจเช็กระบบบ่อปลา')" 
+            <button onclick="sendQuickPrompt('28-29 ไปตรวจงานระบบไฟ ที่ศูนย์ราชการ')" 
               class="shrink-0 bg-surface-card hover:bg-surface-cardHover border border-stone-800 text-stone-300 px-2.5 py-1 rounded-full transition active:scale-95">
-              ⚡ ไม่ระบุวันเวลา (ยึดเวลาปัจจุบัน)
+              📍 28-29 ตรวจไฟ ที่ศูนย์ราชการ
+            </button>
+            <button onclick="sendQuickPrompt('ส่งปลากัด ที่ไปรษณีย์')" 
+              class="shrink-0 bg-surface-card hover:bg-surface-cardHover border border-stone-800 text-stone-300 px-2.5 py-1 rounded-full transition active:scale-95">
+              🐟 ส่งปลากัด (ไม่ระบุเวลา)
             </button>
           </div>
 
@@ -209,7 +213,7 @@
             </button>
 
             <div class="flex-1 bg-surface-card border border-stone-800 rounded-xl px-3 py-2 focus-within:border-brand-500/70 focus-within:ring-1 focus-within:ring-brand-500/20 transition flex items-center">
-              <textarea id="chat-input" rows="1" placeholder="พิมพ์บอกเลขา เช่น 28-29 ไปต่างจังหวัด..." 
+              <textarea id="chat-input" rows="1" placeholder="ถามงาน หรือบอกเลขา เช่น พรุ่งนี้มีงานไร..." 
                 oninput="autoResizeTextarea(this)"
                 onkeydown="handleKeySubmit(event)"
                 class="w-full bg-transparent resize-none text-xs text-stone-100 placeholder-stone-500 focus:outline-none max-h-20 leading-snug custom-scroll"></textarea>
@@ -251,7 +255,7 @@
           <span id="selected-date-count" class="text-[9px] bg-stone-800 text-stone-400 px-1.5 py-0.5 rounded font-mono">0 รายการ</span>
         </div>
 
-        <!-- Selected Day Events (with Delete Button) -->
+        <!-- Selected Day Events (Clickable for full details) -->
         <div id="calendar-day-events" class="flex-1 min-h-0 custom-scroll space-y-1.5 pb-2"></div>
       </section>
 
@@ -299,6 +303,63 @@
         <span class="text-[10px] font-medium tracking-tight">ภารกิจ</span>
       </button>
     </nav>
+  </div>
+
+  <!-- BOTTOM SHEET: EVENT & TASK FULL DETAILS (แก้ปัญหางานยาวอ่านไม่หมด) -->
+  <div id="sheet-event-detail" class="sheet-wrapper fixed inset-0 z-50 hidden-sheet">
+    <div class="sheet-backdrop fixed inset-0 bg-black/80 backdrop-blur-xs" onclick="closeBottomSheet('sheet-event-detail')"></div>
+    <div class="sheet-container fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-surface-card rounded-t-[32px] p-5 shadow-2xl border-t border-stone-800 z-10 max-h-[85vh] overflow-y-auto">
+      <div class="w-10 h-1 bg-stone-700 rounded-full mx-auto mb-3"></div>
+
+      <div class="flex justify-between items-center mb-3">
+        <span id="detail-badge-type" class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-400">นัดหมาย</span>
+        <button onclick="closeBottomSheet('sheet-event-detail')" class="w-6 h-6 bg-stone-800 rounded-full flex items-center justify-center text-stone-400 hover:text-white text-xs">&times;</button>
+      </div>
+
+      <!-- Detail Card Fields -->
+      <div class="space-y-3 text-xs">
+        <!-- ทำอะไร -->
+        <div>
+          <span class="text-[10px] text-stone-500 font-medium uppercase">📝 ทำอะไร / กิจกรรม</span>
+          <p id="detail-title" class="text-sm font-semibold text-white mt-0.5 leading-relaxed break-words whitespace-pre-wrap select-text"></p>
+        </div>
+
+        <!-- กี่โมง & วันที่ -->
+        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-stone-800/80">
+          <div>
+            <span class="text-[10px] text-stone-500 font-medium uppercase">⏰ กี่โมง</span>
+            <p id="detail-time" class="text-xs font-mono font-medium text-brand-400 mt-0.5">ไม่ได้ระบุเวลา</p>
+          </div>
+          <div>
+            <span class="text-[10px] text-stone-500 font-medium uppercase">🗓️ วันที่</span>
+            <p id="detail-date" class="text-xs font-mono font-medium text-stone-200 mt-0.5"></p>
+          </div>
+        </div>
+
+        <!-- ที่ไหน -->
+        <div class="pt-2 border-t border-stone-800/80">
+          <span class="text-[10px] text-stone-500 font-medium uppercase">📍 ที่ไหน (สถานที่)</span>
+          <p id="detail-location" class="text-xs font-medium text-stone-200 mt-0.5">ไม่ได้ระบุสถานที่</p>
+        </div>
+
+        <!-- สถานะ -->
+        <div class="pt-2 border-t border-stone-800/80 flex items-center justify-between">
+          <span class="text-[10px] text-stone-500 font-medium uppercase">สถานะ</span>
+          <span id="detail-status" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-stone-800 text-stone-300">รอดำเนินการ</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center space-x-2 mt-5">
+        <button id="detail-delete-btn" class="flex-1 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-xl font-medium text-xs transition active:scale-95 flex items-center justify-center space-x-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+          <span>ลบรายการนี้</span>
+        </button>
+        <button onclick="closeBottomSheet('sheet-event-detail')" class="px-5 py-2.5 bg-stone-800 hover:bg-stone-700 text-stone-200 rounded-xl font-medium text-xs transition active:scale-95">
+          ปิด
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Bottom Sheet: Settings -->
@@ -528,7 +589,68 @@
     }
 
     // ==============================================
-    // CHAT & MESSAGE PERSISTENCE WITH DELETE BUTTON
+    // EVENT & TASK DETAILS MODAL (เปิดอ่านข้อความเต็ม)
+    // ==============================================
+    function openEventDetail(eventId) {
+      triggerHaptic(15);
+      const evt = AppDB.events.find(e => e.id === eventId);
+      if (!evt) return;
+
+      document.getElementById('detail-badge-type').innerText = 'นัดหมายปฏิทิน';
+      document.getElementById('detail-title').innerText = evt.title || '-';
+      document.getElementById('detail-date').innerText = evt.date || '-';
+      document.getElementById('detail-time').innerText = evt.time ? `${evt.time} น.` : 'ไม่ได้ระบุเวลา';
+      document.getElementById('detail-location').innerText = evt.location ? evt.location : 'ไม่ได้ระบุสถานที่';
+      
+      const statusEl = document.getElementById('detail-status');
+      if (evt.migrated) {
+        statusEl.innerText = 'ถึงเวลาแล้ว (อยู่ในภารกิจ)';
+        statusEl.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400';
+      } else {
+        statusEl.innerText = 'รอดำเนินการตามเวลา';
+        statusEl.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-stone-800 text-stone-300';
+      }
+
+      const delBtn = document.getElementById('detail-delete-btn');
+      delBtn.onclick = () => {
+        deleteEvent(evt.id);
+        closeBottomSheet('sheet-event-detail');
+      };
+
+      openBottomSheet('sheet-event-detail');
+    }
+
+    function openTaskDetail(taskId) {
+      triggerHaptic(15);
+      const task = AppDB.tasks.find(t => t.id === taskId);
+      if (!task) return;
+
+      document.getElementById('detail-badge-type').innerText = 'รายการภารกิจ';
+      document.getElementById('detail-title').innerText = task.title || '-';
+      document.getElementById('detail-date').innerText = task.scheduledTime || '-';
+      document.getElementById('detail-time').innerText = task.scheduledTime ? task.scheduledTime.split(' ')[1] || 'ไม่ได้ระบุเวลา' : 'ไม่ได้ระบุเวลา';
+      document.getElementById('detail-location').innerText = task.location ? task.location : 'ไม่ได้ระบุสถานที่';
+      
+      const statusEl = document.getElementById('detail-status');
+      if (task.done) {
+        statusEl.innerText = 'เสร็จสิ้นแล้ว';
+        statusEl.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400';
+      } else {
+        statusEl.innerText = 'รอเช็กให้เสร็จ';
+        statusEl.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-400';
+      }
+
+      const delBtn = document.getElementById('detail-delete-btn');
+      delBtn.onclick = () => {
+        deleteTask(task.id);
+        closeBottomSheet('sheet-event-detail');
+      };
+
+      openBottomSheet('sheet-event-detail');
+    }
+
+    // ==============================================
+    // CHAT ENGINE & PERSISTENCE
     // ==============================================
     function renderChatHistory() {
       const container = document.getElementById('chat-messages-container');
@@ -538,12 +660,12 @@
       if (AppDB.chatHistory.length === 0) {
         AppDB.chatHistory.push({
           sender: 'assistant',
-          text: `สวัสดีครับคุณเดียร์ ระบบ เลขา พร้อมบันทึกงานแล้ว ✨ พิมพ์ช่วงวัน เช่น "28-29 ไปสัมมนา" ได้เลย ระบบจะแยกนัดหมายลงปฏิทินให้ครบทุกวันครับ`
+          text: `สวัสดีครับคุณเดียร์ ระบบ เลขา พร้อมบันทึกและตอบคำถามตารางงานแล้ว ✨ คุณเดียร์สามารถพิมพ์ถาม เช่น "วันนี้มีงานไรบ้าง" หรือพิมพ์บันทึกนัดหมายแยกกี่โมง/ที่ไหนได้เลยครับ`
         });
         localStorage.setItem('jw_chat_history', JSON.stringify(AppDB.chatHistory));
       }
 
-      AppDB.chatHistory.forEach((item, msgIdx) => {
+      AppDB.chatHistory.forEach((item) => {
         if (item.sender === 'user') {
           const wrap = document.createElement('div');
           wrap.className = "flex justify-end";
@@ -558,15 +680,24 @@
           bubble.className = "flex items-start space-x-2";
           let actionCard = '';
           
+          // Render Created Event Cards
           if (item.createdEvents && item.createdEvents.length > 0) {
+            const firstEvt = item.createdEvents[0];
             const dateListText = item.createdEvents.map(e => e.date).join(', ');
             actionCard = `
               <div class="mt-2 bg-brand-500/10 border border-brand-500/30 rounded-xl p-2.5 text-xs">
                 <div class="flex items-center justify-between text-brand-400 font-semibold mb-1">
                   <span>📅 นัดหมายในระบบ (${item.createdEvents.length} วัน)</span>
-                  <span class="font-mono bg-stone-900 px-1.5 py-0.5 rounded text-[10px] text-brand-300 border border-brand-500/20">${item.createdEvents[0].time} น.</span>
+                  ${firstEvt.time ? `<span class="font-mono bg-stone-900 px-1.5 py-0.5 rounded text-[10px] text-brand-300 border border-brand-500/20">${firstEvt.time} น.</span>` : '<span class="text-[9px] text-stone-400">ไม่ได้ระบุเวลา</span>'}
                 </div>
-                <p class="font-medium text-stone-100">${escapeHtml(item.createdEvents[0].title)}</p>
+                
+                <p onclick="openEventDetail(${firstEvt.id})" class="font-medium text-stone-100 hover:text-brand-300 transition cursor-pointer flex items-center justify-between">
+                  <span class="truncate">${escapeHtml(firstEvt.title)}</span>
+                  <span class="text-[9px] text-brand-400/80 shrink-0 ml-1">แตะอ่านเต็ม &gt;</span>
+                </p>
+
+                ${firstEvt.location ? `<p class="text-[10px] text-stone-300 mt-1 flex items-center space-x-1"><span>📍</span><span>${escapeHtml(firstEvt.location)}</span></p>` : ''}
+
                 <div class="flex items-center justify-between mt-1.5 pt-1.5 border-t border-brand-500/20 text-[10px] text-stone-400">
                   <span class="truncate pr-1">🗓️ ${dateListText}</span>
                   <button onclick="deleteBatchEvents([${item.createdEvents.map(e => e.id).join(',')}])" 
@@ -578,10 +709,31 @@
               </div>
             `;
           }
+
+          // Render Query Result Cards
+          if (item.queryEvents && item.queryEvents.length > 0) {
+            actionCard = `
+              <div class="mt-2 space-y-1.5">
+                ${item.queryEvents.map(evt => `
+                  <div onclick="openEventDetail(${evt.id})" class="bg-surface-ground border border-stone-800 hover:border-brand-500/40 p-2 rounded-xl flex items-center justify-between cursor-pointer active:scale-98 transition">
+                    <div class="min-w-0 pr-1.5">
+                      <p class="text-xs font-medium text-stone-100 truncate">${escapeHtml(evt.title)}</p>
+                      <div class="flex items-center space-x-2 text-[10px] text-stone-400 mt-0.5">
+                        <span>⏰ ${evt.time ? evt.time + ' น.' : 'ไม่ระบุเวลา'}</span>
+                        ${evt.location ? `<span>📍 ${escapeHtml(evt.location)}</span>` : ''}
+                      </div>
+                    </div>
+                    <span class="text-[9px] text-brand-400 shrink-0">ดูรายละเอียด &gt;</span>
+                  </div>
+                `).join('')}
+              </div>
+            `;
+          }
+
           bubble.innerHTML = `
             <div class="w-7 h-7 rounded-lg bg-surface-card border border-stone-800 text-brand-400 font-bold flex items-center justify-center text-xs shrink-0">ล</div>
             <div class="bg-surface-card border border-stone-800 rounded-2xl rounded-tl-xs px-3.5 py-2.5 text-stone-200 text-xs max-w-[88%] shadow-glass">
-              <p class="text-stone-300 leading-relaxed">${escapeHtml(item.text)}</p>
+              <p class="text-stone-300 leading-relaxed whitespace-pre-wrap">${escapeHtml(item.text)}</p>
               ${actionCard}
             </div>
           `;
@@ -617,7 +769,7 @@
       }
 
       removeTypingBubble(typingId);
-      applyAIResult(result);
+      applyAIResult(result, text);
     }
 
     function renderTypingBubble() {
@@ -644,20 +796,25 @@
       if (el) el.remove();
     }
 
-    // ==============================================
-    // DATE EXTRACTION & PARSER (MONTHS & RANGES)
-    // ==============================================
+    // ==========================================================
+    // NLP & GEMINI API: SEPARATION OF INTENT, TIME & LOCATION
+    // ==========================================================
     async function processWithGeminiAPI(promptText) {
       const bkk = getBangkokDateParts(new Date());
-      const sysInstruction = `You are "ระบบ เลขา", personal executive assistant in Thailand.
+      const sysInstruction = `You are "ระบบ เลขา", executive personal assistant in Thailand.
 Current Bangkok DateTime: ${bkk.dateStr} ${bkk.timeStr} (Timezone Asia/Bangkok, Year ${bkk.year}, Month ${bkk.month}).
-Task: Extract title, time, and ALL dates (as array of YYYY-MM-DD):
-1. If user gives a range like "28-29", include both/all dates in the "dates" array.
-2. If user specifies a month (e.g. ธันวา, มกรา), use that specified month (advance year if already passed).
-3. If user DOES NOT specify a month, default strictly to current month (${bkk.month}) and year (${bkk.year}).
-4. If no time is specified, default to current time: "${bkk.timeStr}".
-Return ONLY clean JSON without markdown:
-{"title": "...", "dates": ["YYYY-MM-DD", ...], "time": "HH:mm", "summary": "ข้อความตอบรับสั้นๆ"}`;
+Task:
+1. Determine intent: "query" (user asks what tasks/schedule they have) OR "create" (user tells you to record/schedule something).
+2. If intent == "query":
+   - "queryTarget": "today" | "tomorrow" | "all" | "YYYY-MM-DD"
+3. If intent == "create":
+   - "title": Activity / สิ่งที่ทำ (clean, concise).
+   - "dates": Array of dates [YYYY-MM-DD]. Range "28-29" => include each day. If no month, use current month (${bkk.month}).
+   - "time": "HH:mm" ONLY IF user specified a time. IF NOT SPECIFIED, return empty string "".
+   - "location": Location name ONLY IF user specified where (e.g. ที่ว่าการ, ไปรษณีย์). IF NOT SPECIFIED, return empty string "".
+   - "summary": Polite Thai response summarizing what was recorded.
+Respond ONLY with JSON without markdown:
+{"intent": "query"|"create", "title": "...", "dates": [...], "time": "", "location": "", "queryTarget": "today", "summary": "..."}`;
 
       try {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${AppDB.apiKey}`;
@@ -684,25 +841,27 @@ Return ONLY clean JSON without markdown:
     function processWithLocalParser(inputText) {
       const bkk = getBangkokDateParts(new Date());
 
-      // 1. Detect Month (If not mentioned, use current Bangkok month)
+      // 1. Detect Query Intent (เช่น วันนี้มีงานไรบ้าง, พรุ่งนี้มีอะไรบ้าง)
+      const isQuery = /(มีงาน|มีนัด|ตาราง|มีอะไร|ทำอะไรบ้าง|วันนี้มี|พรุ่งนี้มี|เช็กงาน|สรุปงาน)/i.test(inputText);
+      if (isQuery) {
+        let qTarget = 'today';
+        if (inputText.includes('พรุ่งนี้')) qTarget = 'tomorrow';
+        return { intent: 'query', queryTarget: qTarget };
+      }
+
+      // 2. Detect Month
       let targetMonth = bkk.month;
       let targetYear = bkk.year;
-      let monthSpecified = false;
-
       for (const item of thaiMonthsList) {
         if (item.re.test(inputText)) {
           targetMonth = item.num;
-          monthSpecified = true;
-          // If specified month has already passed in this year, schedule for next year
-          if (targetMonth < bkk.month) {
-            targetYear = bkk.year + 1;
-          }
+          if (targetMonth < bkk.month) targetYear = bkk.year + 1;
           break;
         }
       }
 
-      // 2. Detect Time
-      let time = bkk.timeStr;
+      // 3. Detect Time (Leave empty string if user didn't specify)
+      let time = "";
       const timeMatch = inputText.match(/(\d{1,2}[:.]\d{2})|((?:บ่าย|เช้า|ตอน)?\s*(\d{1,2})\s*(?:โมง|น\.|นาฬิกา))/i);
       if (timeMatch) {
         if (timeMatch[1]) {
@@ -715,10 +874,16 @@ Return ONLY clean JSON without markdown:
         }
       }
 
-      // 3. Detect Dates (Check Date Range e.g. "28-29", "28 - 29", "28 ถึง 29")
+      // 4. Detect Location (Leave empty string if none)
+      let location = "";
+      const locMatch = inputText.match(/(?:ที่|ไปที่|ณ)\s*([ก-๙a-zA-Z0-9_.\-]+)/);
+      if (locMatch && !locMatch[1].match(/(วัน|โมง|นาฬิกา|เดือน|ปี)/)) {
+        location = locMatch[1].trim();
+      }
+
+      // 5. Detect Dates & Ranges
       let dates = [];
       const rangeMatch = inputText.match(/(?:วันที่\s*)?(\d{1,2})\s*(?:[-–—]|ถึง)\s*(\d{1,2})/);
-      
       if (rangeMatch) {
         const startDay = parseInt(rangeMatch[1]);
         const endDay = parseInt(rangeMatch[2]);
@@ -729,7 +894,6 @@ Return ONLY clean JSON without markdown:
         }
       }
 
-      // If not a range, check for single date
       if (dates.length === 0) {
         if (inputText.includes("พรุ่งนี้")) {
           const tomorrow = new Date();
@@ -745,33 +909,42 @@ Return ONLY clean JSON without markdown:
             const dayNum = parseInt(singleDayMatch[1]);
             dates.push(`${targetYear}-${String(targetMonth).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`);
           } else {
-            // Default to today if no date found
             dates.push(`${targetYear}-${String(targetMonth).padStart(2, '0')}-${String(bkk.day).padStart(2, '0')}`);
           }
         }
       }
 
-      const cleanTitle = inputText
+      // Clean Activity Title
+      let cleanTitle = inputText
         .replace(/(?:วันที่\s*)?(\d{1,2})\s*(?:[-–—]|ถึง)\s*(\d{1,2})/g, '')
         .replace(/(?:วันที่\s*)(\d{1,2})/g, '')
+        .replace(/(?:ที่|ไปที่|ณ)\s*([ก-๙a-zA-Z0-9_.\-]+)/g, '')
+        .replace(/(\d{1,2}[:.]\d{2})|((?:บ่าย|เช้า|ตอน)?\s*(\d{1,2})\s*(?:โมง|น\.|นาฬิกา))/g, '')
         .replace(/^(นัด|ไป|มีนัด|เตือน|อย่าลืม|ต้อง)/, '')
         .trim();
 
-      const summaryMonthName = thaiMonthsList[targetMonth - 1].short;
-      const summaryMsg = dates.length > 1
-        ? `บันทึกนัดหมาย "${cleanTitle || inputText}" ในวันที่ ${dates.map(d => d.slice(8)).join(', ')} ${summaryMonthName} (รวม ${dates.length} วัน) เรียบร้อยครับ`
-        : `บันทึกนัดหมาย "${cleanTitle || inputText}" วันที่ ${dates[0].slice(8)} ${summaryMonthName} เรียบร้อยครับ`;
-
       return {
+        intent: 'create',
         title: cleanTitle || inputText,
         dates: dates,
         time: time,
-        summary: summaryMsg
+        location: location,
+        summary: `บันทึกนัดหมาย "${cleanTitle || inputText}" เรียบร้อยครับ`
       };
     }
 
-    function applyAIResult(res) {
-      const datesToRegister = (res.dates && res.dates.length > 0) ? res.dates : [res.date];
+    // ==============================================
+    // APPLY RESULT (HANDLE QUERY VS CREATE)
+    // ==============================================
+    function applyAIResult(res, userPrompt) {
+      // 1. Handle Query Intent (ตอบคำถามตารางงาน)
+      if (res && res.intent === 'query') {
+        handleQuerySchedule(res.queryTarget || 'today');
+        return;
+      }
+
+      // 2. Handle Create Intent (บันทึกนัดหมาย)
+      const datesToRegister = (res.dates && res.dates.length > 0) ? res.dates : [res.date || getBangkokDateParts().dateStr];
       const createdEvents = [];
 
       datesToRegister.forEach((dStr, idx) => {
@@ -779,8 +952,9 @@ Return ONLY clean JSON without markdown:
           id: Date.now() + idx,
           title: res.title,
           date: dStr,
-          time: res.time,
-          dateTimeISO: `${dStr}T${res.time}:00`,
+          time: res.time || "", // กี่โมง (ถ้าไม่มีเว้นว่าง)
+          location: res.location || "", // ที่ไหน (ถ้าไม่มีเว้นว่าง)
+          dateTimeISO: res.time ? `${dStr}T${res.time}:00` : `${dStr}T23:59:59`,
           migrated: false
         };
         AppDB.events.push(newEvent);
@@ -789,9 +963,15 @@ Return ONLY clean JSON without markdown:
 
       localStorage.setItem('jw_events', JSON.stringify(AppDB.events));
 
+      // Construct clean response
+      let summaryText = res.summary || `บันทึกนัดหมาย "${res.title}" เรียบร้อยแล้วครับ`;
+      if (res.time || res.location) {
+        summaryText += `\n⏰ เวลา: ${res.time ? res.time + ' น.' : 'ไม่ได้ระบุ'}\n📍 สถานที่: ${res.location ? res.location : 'ไม่ได้ระบุ'}`;
+      }
+
       AppDB.chatHistory.push({
         sender: 'assistant',
-        text: res.summary || 'บันทึกนัดหมายเรียบร้อยแล้วครับ',
+        text: summaryText,
         createdEvents: createdEvents
       });
       localStorage.setItem('jw_chat_history', JSON.stringify(AppDB.chatHistory));
@@ -799,11 +979,57 @@ Return ONLY clean JSON without markdown:
       checkAndMigrateDueEvents();
       renderChatHistory();
       renderCalendarGrid();
-      notifyIsland(`บันทึกลงปฏิทินแล้ว (${createdEvents.length} วัน)`, "📅");
+      notifyIsland(`บันทึกสำเร็จ (${createdEvents.length} วัน)`, "📅");
+    }
+
+    // Query Execution & Formulation
+    function handleQuerySchedule(queryTarget) {
+      const bkk = getBangkokDateParts(new Date());
+      let targetDateStr = bkk.dateStr;
+      let label = "วันนี้";
+
+      if (queryTarget === 'tomorrow') {
+        const tom = new Date();
+        tom.setDate(tom.getDate() + 1);
+        targetDateStr = getBangkokDateParts(tom).dateStr;
+        label = "พรุ่งนี้";
+      }
+
+      // Filter Events & Tasks for target date
+      const matchingEvents = AppDB.events.filter(e => e.date === targetDateStr);
+      const pendingTasks = AppDB.tasks.filter(t => !t.done);
+
+      let replyMsg = "";
+      if (matchingEvents.length === 0 && pendingTasks.length === 0) {
+        replyMsg = `ตรวจดูแล้ว ${label} (${targetDateStr}) คุณเดียร์ไม่มีนัดหมายและไม่มีงานค้างเลยครับ ว่างตลอดวันครับ ✨`;
+      } else {
+        replyMsg = `📋 ตารางงานและนัดหมายสำหรับ${label} (${targetDateStr}) มีดังนี้ครับ:`;
+        if (matchingEvents.length === 0) {
+          replyMsg += `\n- ไม่มีนัดหมายในปฏิทิน`;
+        } else {
+          matchingEvents.forEach((e, i) => {
+            const timePart = e.time ? `⏰ ${e.time} น.` : `⏰ ไม่ระบุเวลา`;
+            const locPart = e.location ? ` | 📍 ${e.location}` : ``;
+            replyMsg += `\n${i + 1}. ${timePart}${locPart} : ${e.title}`;
+          });
+        }
+        if (pendingTasks.length > 0) {
+          replyMsg += `\n\n📝 ภารกิจรอเช็กอีก ${pendingTasks.length} รายการในหน้ารายการงานครับ`;
+        }
+      }
+
+      AppDB.chatHistory.push({
+        sender: 'assistant',
+        text: replyMsg,
+        queryEvents: matchingEvents
+      });
+      localStorage.setItem('jw_chat_history', JSON.stringify(AppDB.chatHistory));
+      renderChatHistory();
+      notifyIsland(`สรุปตารางงาน${label}แล้ว`, "📋");
     }
 
     // ==============================================
-    // EVENT DELETION CONTROLLERS
+    // EVENT DELETION
     // ==============================================
     function deleteEvent(id) {
       triggerHaptic(15);
@@ -816,11 +1042,10 @@ Return ONLY clean JSON without markdown:
 
     function deleteBatchEvents(ids) {
       triggerHaptic(15);
-      if (confirm(`ต้องการลบนัดหมายรายการนี้ทั้งหมด (${ids.length} รายการ) หรือไม่?`)) {
+      if (confirm(`ต้องการลบนัดหมายรายการนี้ทั้งหมด (${ids.length} วัน) หรือไม่?`)) {
         AppDB.events = AppDB.events.filter(e => !ids.includes(e.id));
         localStorage.setItem('jw_events', JSON.stringify(AppDB.events));
         
-        // Remove event reference from chat item
         AppDB.chatHistory.forEach(item => {
           if (item.createdEvents) {
             item.createdEvents = item.createdEvents.filter(e => !ids.includes(e.id));
@@ -858,7 +1083,8 @@ Return ONLY clean JSON without markdown:
           const newTask = {
             id: Date.now() + Math.floor(Math.random() * 100),
             title: evt.title,
-            scheduledTime: `${evt.date} ${evt.time}`,
+            scheduledTime: evt.time ? `${evt.date} ${evt.time}` : evt.date,
+            location: evt.location || "",
             sourceEventId: evt.id,
             done: false
           };
@@ -973,17 +1199,18 @@ Return ONLY clean JSON without markdown:
 
       dayEvents.forEach(evt => {
         const card = document.createElement('div');
-        card.className = "bg-surface-card border border-stone-800 p-2.5 rounded-xl flex items-center justify-between";
+        card.className = "bg-surface-card border border-stone-800 p-2.5 rounded-xl flex items-center justify-between cursor-pointer active:scale-98 transition";
         card.innerHTML = `
-          <div class="flex items-center space-x-2.5 min-w-0 pr-2">
-            <div class="w-9 h-9 rounded-lg bg-brand-500/10 border border-brand-500/20 text-brand-400 flex flex-col items-center justify-center font-mono font-bold text-[11px] shrink-0">
-              <span>${evt.time}</span>
+          <div onclick="openEventDetail(${evt.id})" class="flex items-center space-x-2.5 min-w-0 pr-2 flex-1">
+            <div class="w-9 h-9 rounded-lg bg-brand-500/10 border border-brand-500/20 text-brand-400 flex flex-col items-center justify-center font-mono font-bold text-[10px] shrink-0">
+              <span>${evt.time ? evt.time : 'ทั้งวัน'}</span>
             </div>
             <div class="min-w-0">
               <h4 class="text-xs font-semibold text-stone-100 truncate">${escapeHtml(evt.title)}</h4>
-              <p class="text-[9px] text-stone-400 mt-0.5">
-                ${evt.migrated ? '✅ ถึงเวลาแล้ว (ย้ายไปภารกิจ)' : '⏳ รอถึงเวลานัดหมาย'}
-              </p>
+              <div class="flex items-center space-x-2 text-[10px] text-stone-400 mt-0.5">
+                ${evt.location ? `<span>📍 ${escapeHtml(evt.location)}</span>` : ''}
+                <span>${evt.migrated ? '✅ อยู่ในภารกิจ' : '⏳ รอตามเวลา'}</span>
+              </div>
             </div>
           </div>
           <button onclick="deleteEvent(${evt.id})" title="ลบนัดหมายนี้" class="p-2 text-stone-500 hover:text-rose-400 active:scale-90 transition">
@@ -1035,11 +1262,14 @@ Return ONLY clean JSON without markdown:
           <div class="flex items-center space-x-2.5 flex-1 min-w-0 pr-2">
             <input type="checkbox" ${task.done ? 'checked' : ''} onchange="toggleTaskDone(${task.id})" 
               class="w-4 h-4 rounded text-brand-500 focus:ring-0 cursor-pointer accent-amber-400" />
-            <div class="min-w-0">
+            <div onclick="openTaskDetail(${task.id})" class="min-w-0 flex-1 cursor-pointer">
               <span class="text-xs font-medium text-stone-100 truncate block ${task.done ? 'line-through text-stone-500' : ''}">
                 ${escapeHtml(task.title)}
               </span>
-              <span class="text-[9px] text-stone-400 font-mono block">เวลานัด: ${task.scheduledTime || '-'}</span>
+              <div class="flex items-center space-x-2 text-[9px] text-stone-400 font-mono mt-0.5">
+                <span>⏰ ${task.scheduledTime || '-'}</span>
+                ${task.location ? `<span>📍 ${escapeHtml(task.location)}</span>` : ''}
+              </div>
             </div>
           </div>
           <button onclick="deleteTask(${task.id})" class="text-stone-500 hover:text-rose-400 p-1 text-sm">&times;</button>
@@ -1085,7 +1315,7 @@ Return ONLY clean JSON without markdown:
     }
 
     // ==============================================
-    // SPEECH RECOGNITION (VOICE INPUT ONLY)
+    // SPEECH RECOGNITION
     // ==============================================
     let recognition = null;
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
