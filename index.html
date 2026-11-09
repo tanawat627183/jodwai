@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="ระบบ เลขา">
   <meta name="theme-color" content="#09090B">
-  <title>ระบบ เลขา - Executive Edition</title>
+  <title>ระบบ เลขา</title>
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -170,30 +170,30 @@
 
         <!-- Chat Stream Area -->
         <div id="chat-scroller" class="flex-1 min-h-0 custom-scroll px-3.5 py-3 space-y-3">
-          <!-- Suggestion Chips (Brain dump, drafts, queries) -->
+          <!-- Suggestion Chips -->
           <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 text-[11px] shrink-0 no-scrollbar">
-            <button onclick="sendQuickPrompt('11 โมงตรวจระบบไฟที่ไซต์งาน แล้วบ่ายสองส่งของที่ขนส่ง ทวงใบเสร็จด้วย')" 
+            <button onclick="sendQuickPrompt('27 โอนเงินให้เกด')" 
               class="shrink-0 bg-brand-500/10 hover:bg-brand-500/20 border border-brand-500/30 text-brand-400 px-2.5 py-1 rounded-full transition active:scale-95 font-medium">
-              ⚡ สั่งรัวหลายงาน (Brain Dump)
+              💡 27 โอนเงินให้เกด
             </button>
-            <button onclick="sendQuickPrompt('ร่างข้อความแจ้งลูกค้าเรื่องขอเลื่อนเวลาส่งของ')" 
+            <button onclick="sendQuickPrompt('27 10:00 โอนเงินให้เกด ที่บ้าน')" 
               class="shrink-0 bg-surface-card hover:bg-surface-cardHover border border-stone-800 text-stone-300 px-2.5 py-1 rounded-full transition active:scale-95">
-              ✍️ ร่างข้อความแจ้งลูกค้า
+              ⏰ 27 10:00 โอนเงิน ที่บ้าน
+            </button>
+            <button onclick="sendQuickPrompt('28-29 ไปตรวจงาน ที่ศูนย์ราชการ')" 
+              class="shrink-0 bg-surface-card hover:bg-surface-cardHover border border-stone-800 text-stone-300 px-2.5 py-1 rounded-full transition active:scale-95">
+              🗓️ 28-29 ไปตรวจงาน ที่ศูนย์ราชการ
             </button>
             <button onclick="sendQuickPrompt('งานทั้งเดือนนี้มีอะไรบ้าง')" 
               class="shrink-0 bg-surface-card hover:bg-surface-cardHover border border-stone-800 text-stone-300 px-2.5 py-1 rounded-full transition active:scale-95">
-              🗓️ สรุปงานทั้งเดือนนี้
-            </button>
-            <button onclick="sendQuickPrompt('วันนี้มีงานไรบ้าง')" 
-              class="shrink-0 bg-surface-card hover:bg-surface-cardHover border border-stone-800 text-stone-300 px-2.5 py-1 rounded-full transition active:scale-95">
-              🔍 วันนี้มีงานไรบ้าง
+              🔍 งานทั้งเดือนนี้มีอะไรบ้าง
             </button>
           </div>
 
           <div id="chat-messages-container" class="space-y-3"></div>
         </div>
 
-        <!-- Selected Image Preview Bar (for OCR) -->
+        <!-- Selected Image Preview Bar -->
         <div id="image-preview-bar" class="hidden px-4 py-2 bg-surface-card border-t border-stone-800 flex items-center justify-between shrink-0">
           <div class="flex items-center space-x-2">
             <img id="image-preview-thumb" src="" alt="preview" class="w-10 h-10 object-cover rounded-lg border border-stone-700">
@@ -223,16 +223,15 @@
         <!-- Bottom Input Bar -->
         <div class="px-3 py-2 bg-surface-ground shrink-0 border-t border-stone-900">
           <form id="chat-form" onsubmit="handleChatSubmit(event)" class="flex items-end space-x-1.5">
-            <!-- Hidden Image File Input -->
             <input type="file" id="image-file-input" accept="image/*" class="hidden" onchange="handleImageSelected(event)" />
 
-            <!-- Camera / Image Upload Button -->
+            <!-- Camera / Image Upload -->
             <button type="button" onclick="document.getElementById('image-file-input').click()" title="ถ่ายรูปใบนัด / แนบรูปภาพ" 
               class="w-9 h-9 rounded-xl bg-surface-card border border-stone-800 hover:border-brand-500/50 flex items-center justify-center text-stone-300 transition active:scale-90 shrink-0 mb-0.5">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
             </button>
 
-            <!-- Voice Mic Button -->
+            <!-- Voice Mic -->
             <button type="button" id="mic-btn" onclick="toggleVoiceInput()" title="กดเพื่อพูด" 
               class="w-9 h-9 rounded-xl bg-surface-card border border-stone-800 hover:border-brand-500/50 flex items-center justify-center text-stone-300 transition active:scale-90 shrink-0 mb-0.5">
               <svg id="mic-icon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
@@ -240,7 +239,7 @@
 
             <!-- Text Box -->
             <div class="flex-1 bg-surface-card border border-stone-800 rounded-xl px-3 py-2 focus-within:border-brand-500/70 focus-within:ring-1 focus-within:ring-brand-500/20 transition flex items-center">
-              <textarea id="chat-input" rows="1" placeholder="สั่งงาน, ร่างข้อความ, ถามงาน..." 
+              <textarea id="chat-input" rows="1" placeholder="พิมพ์บอกเลขา เช่น 27 10:00 ประชุม..." 
                 oninput="autoResizeTextarea(this)"
                 onkeydown="handleKeySubmit(event)"
                 class="w-full bg-transparent resize-none text-xs text-stone-100 placeholder-stone-500 focus:outline-none max-h-20 leading-snug custom-scroll"></textarea>
@@ -283,7 +282,7 @@
           <span id="selected-date-count" class="text-[9px] bg-stone-800 text-stone-400 px-1.5 py-0.5 rounded font-mono">0 รายการ</span>
         </div>
 
-        <!-- Selected Day Events (Clickable for full details, Map & Edit) -->
+        <!-- Selected Day Events -->
         <div id="calendar-day-events" class="flex-1 min-h-0 custom-scroll space-y-1.5 pb-2"></div>
       </section>
 
@@ -307,7 +306,6 @@
             <button onclick="filterTasks('pending')" id="filter-pending" class="px-2.5 py-0.5 rounded-full bg-surface-card text-stone-400 hover:text-white border border-stone-800 transition">รอดำเนินการ</button>
             <button onclick="filterTasks('completed')" id="filter-completed" class="px-2.5 py-0.5 rounded-full bg-surface-card text-stone-400 hover:text-white border border-stone-800 transition">เสร็จสิ้น</button>
           </div>
-          <!-- Evening Roll-over Button -->
           <button onclick="rollOverTasksToTomorrow()" title="ยกยอดงานค้างทั้งหมดไปวันพรุ่งนี้" class="px-2 py-0.5 rounded-full bg-brand-500/10 hover:bg-brand-500/20 border border-brand-500/30 text-brand-400 font-medium transition active:scale-95 shrink-0 flex items-center space-x-1">
             <span>⏩</span>
             <span>เลื่อนไปพรุ่งนี้</span>
@@ -660,7 +658,7 @@
     }
 
     // ==============================================
-    // MULTIMODAL IMAGE UPLOAD (OCR FOR APPOINTMENTS)
+    // MULTIMODAL IMAGE UPLOAD (OCR)
     // ==============================================
     function handleImageSelected(event) {
       const file = event.target.files[0];
@@ -671,7 +669,7 @@
         AppDB.attachedImageBase64 = e.target.result;
         document.getElementById('image-preview-thumb').src = AppDB.attachedImageBase64;
         document.getElementById('image-preview-bar').classList.remove('hidden');
-        notifyIsland("แนบรูปภาพแล้ว พิมพ์ข้อความหรือกดส่งได้เลย", "📸");
+        notifyIsland("แนบรูปภาพแล้ว กดส่งเพื่อถอดข้อมูลได้เลย", "📸");
         triggerHaptic(15);
       };
       reader.readAsDataURL(file);
@@ -714,7 +712,6 @@
         });
       }
 
-      // Try Native Web Share API first (for iOS/Android share to LINE)
       if (navigator.share) {
         navigator.share({
           title: `ตารางงานคุณเดียร์ ${dateFormatted}`,
@@ -739,7 +736,6 @@
     // ==============================================
     function rollOverTasksToTomorrow() {
       triggerHaptic(25);
-      const bkk = getBangkokDateParts(new Date());
       const tom = new Date();
       tom.setDate(tom.getDate() + 1);
       const tomorrowStr = getBangkokDateParts(tom).dateStr;
@@ -776,7 +772,6 @@
       document.getElementById('detail-time').innerText = evt.time ? `${evt.time} น.` : 'ไม่ได้ระบุเวลา';
       document.getElementById('detail-location').innerText = evt.location ? evt.location : 'ไม่ได้ระบุสถานที่';
       
-      // Google Maps Direct Link
       const mapLinkEl = document.getElementById('detail-map-link');
       if (evt.location && evt.location.trim() !== '') {
         mapLinkEl.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(evt.location)}`;
@@ -950,7 +945,7 @@
       if (AppDB.chatHistory.length === 0) {
         AppDB.chatHistory.push({
           sender: 'assistant',
-          text: `สวัสดีครับคุณเดียร์ ระบบ เลขา พร้อมบริการแล้ว ✨ ถ่ายรูปใบนัดให้ผมอ่าน, สั่งรัวหลายงานในประโยคเดียว (Brain Dump), หรือสั่งให้ร่างข้อความแจ้งลูกค้าได้ตลอดเลยครับ`
+          text: `สวัสดีครับคุณเดียร์ ระบบ เลขา พร้อมบันทึกงานตามคอนเซ็ปต์: วันที่ -> เวลา -> สิ่งที่ต้องทำ -> สถานที่ เรียบร้อยแล้วครับ ✨ พิมพ์สั่งงาน เช่น "27 โอนเงินให้เกด" ได้ทันทีครับ`
         });
         localStorage.setItem('jw_chat_history', JSON.stringify(AppDB.chatHistory));
       }
@@ -972,7 +967,6 @@
           bubble.className = "flex items-start space-x-2";
           let actionCard = '';
           
-          // 1. Created Events Card (Multi-item support)
           if (item.createdEvents && item.createdEvents.length > 0) {
             actionCard += `
               <div class="mt-2 space-y-1.5">
@@ -999,7 +993,6 @@
             `;
           }
 
-          // 2. Draft Message Box (One-Tap Copy to LINE)
           if (item.draftText) {
             actionCard += `
               <div class="mt-2 bg-stone-900 border border-stone-800 rounded-xl p-3 text-xs space-y-2">
@@ -1015,7 +1008,6 @@
             `;
           }
 
-          // 3. Query Results List
           if (item.queryEvents && item.queryEvents.length > 0) {
             actionCard += `
               <div class="mt-2 space-y-1.5 max-h-56 custom-scroll pr-1">
@@ -1065,7 +1057,6 @@
       autoResizeTextarea(input);
       cancelImageAttachment();
 
-      // Record User Message
       AppDB.chatHistory.push({
         sender: 'user',
         text: text || "ส่งรูปภาพใบนัด/ตารางกิจกรรม",
@@ -1081,9 +1072,6 @@
         result = await processWithGeminiAPI(text, imageBase64);
       }
       if (!result) {
-        if (imageBase64 && !AppDB.apiKey) {
-          notifyIsland("การอ่านภาพ (OCR) ต้องใส่ Gemini API Key ในตั้งค่าครับ", "⚠️");
-        }
         result = processWithLocalParser(text);
       }
 
@@ -1116,26 +1104,30 @@
     }
 
     // ==========================================================
-    // MULTIMODAL & MULTI-ITEM GEMINI ENGINE (BRAIN DUMP & OCR)
+    // MULTIMODAL & MULTI-ITEM GEMINI ENGINE (ENFORCED CONCEPT)
     // ==========================================================
     async function processWithGeminiAPI(promptText, imageBase64 = null) {
       const bkk = getBangkokDateParts(new Date());
-      const sysInstruction = `You are "ระบบ เลขา", an elite executive personal assistant for Khun Dear in Thailand.
+      const sysInstruction = `You are "ระบบ เลขา", executive personal assistant for Khun Dear in Thailand.
 Current Bangkok DateTime: ${bkk.dateStr} ${bkk.timeStr} (Timezone Asia/Bangkok, Year ${bkk.year}, Month ${bkk.month}).
-Capacities:
-1. Brain Dump / Multitask: If the user dumps multiple tasks or events in one message, extract ALL of them into the "events" or "tasks" array.
-2. OCR: If an image is provided, inspect the slip, medical/appointment paper, or calendar, extract dates, times, locations, and actions.
-3. Message Drafting: If the user says "ร่างข้อความ..." or asks you to compose a message, generate the polished text in "draftText".
-4. Query: If asking what tasks they have, set "intent": "query".
-Respond ONLY with JSON without markdown:
+
+CORE PARSING CONCEPT:
+Every appointment follows this pattern: [Date] [Time] [What to do / Activity] [Location] (any part can be omitted).
+CRITICAL RULES FOR DATES:
+1. Thai speakers frequently write the DAY NUMBER DIRECTLY (1-31) at the start or in the text without the word "วันที่" (e.g. "27 โอนเงินให้เกด", "27 10:00 ไปหาหมอ ที่รพ."). In this case, the date MUST be set to that day of the CURRENT MONTH (${bkk.month}) and YEAR (${bkk.year})! E.g. date: "${bkk.year}-${String(bkk.month).padStart(2, '0')}-27". DO NOT default to today!
+2. Date ranges like "28-29" MUST generate an entry for each date in that range (e.g. 28th and 29th).
+3. If month is named (e.g. ธันวา, มกรา), apply that month. If no month is stated, default strictly to current month (${bkk.month}).
+4. If no date is mentioned at all (e.g. "ไปเอาของ ที่ขนส่ง"), then and only then default to today (${bkk.dateStr}).
+5. Time: Extract "HH:mm" ONLY if user specifies a time. If no time is specified, return empty string "".
+6. Location: Extract location ONLY if user specifies where (e.g. following ที่...). If not specified, return empty string "".
+
+Respond ONLY with clean JSON without markdown code blocks:
 {
   "intent": "create" | "query" | "draft",
   "events": [
     { "title": "...", "date": "YYYY-MM-DD", "time": "HH:mm" or "", "location": "..." or "" }
   ],
-  "tasks": [
-    { "title": "...", "scheduledTime": "YYYY-MM-DD" or "", "location": "" }
-  ],
+  "tasks": [],
   "queryTarget": "today" | "tomorrow" | "this_month" | "all",
   "draftText": "...",
   "summary": "ข้อความสรุปตอบกลับภาษาไทยอย่างสุภาพสำหรับคุณเดียร์"
@@ -1177,6 +1169,123 @@ Respond ONLY with JSON without markdown:
       }
     }
 
+    // ==========================================================
+    // LOCAL SMART PARSER (PRECISION DATE -> TIME -> TASK -> LOC)
+    // ==========================================================
+    function parseSingleScheduleItem(rawText, bkk) {
+      let str = rawText.trim();
+
+      // 1. Detect Month
+      let targetMonth = bkk.month;
+      let targetYear = bkk.year;
+      for (const item of thaiMonthsList) {
+        if (item.re.test(str)) {
+          targetMonth = item.num;
+          if (targetMonth < bkk.month) targetYear = bkk.year + 1;
+          str = str.replace(item.re, ' ');
+          break;
+        }
+      }
+
+      // 2. Detect Dates / Ranges
+      let dates = [];
+      const rangeMatch = str.match(/(?:วันที่\s*)?([1-9]|[12]\d|3[01])\s*(?:[-–—]|ถึง)\s*([1-9]|[12]\d|3[01])/);
+      if (rangeMatch) {
+        const startDay = parseInt(rangeMatch[1]);
+        const endDay = parseInt(rangeMatch[2]);
+        if (startDay <= endDay && endDay <= 31) {
+          for (let d = startDay; d <= endDay; d++) {
+            dates.push(`${targetYear}-${String(targetMonth).padStart(2, '0')}-${String(d).padStart(2, '0')}`);
+          }
+        }
+        str = str.replace(rangeMatch[0], ' ');
+      }
+
+      if (dates.length === 0) {
+        if (str.includes("พรุ่งนี้")) {
+          const tom = new Date();
+          tom.setDate(tom.getDate() + 1);
+          dates.push(getBangkokDateParts(tom).dateStr);
+          str = str.replace(/พรุ่งนี้/g, ' ');
+        } else if (str.includes("มะรืน")) {
+          const d = new Date();
+          d.setDate(d.getDate() + 2);
+          dates.push(getBangkokDateParts(d).dateStr);
+          str = str.replace(/มะรืนนี้|มะรืน/g, ' ');
+        } else if (str.includes("วันนี้")) {
+          dates.push(bkk.dateStr);
+          str = str.replace(/วันนี้/g, ' ');
+        } else {
+          // Check: Explicit 'วันที่ X', OR Leading number '^27 ', OR Standalone day
+          const dayExplicit = str.match(/(?:วันที่\s*|วัน\s*)([1-9]|[12]\d|3[01])\b/);
+          const dayLeading = str.match(/^([1-9]|[12]\d|3[01])(?:\s+|$)/);
+          
+          if (dayExplicit) {
+            const dNum = parseInt(dayExplicit[1]);
+            dates.push(`${targetYear}-${String(targetMonth).padStart(2, '0')}-${String(dNum).padStart(2, '0')}`);
+            str = str.replace(dayExplicit[0], ' ');
+          } else if (dayLeading) {
+            const dNum = parseInt(dayLeading[1]);
+            dates.push(`${targetYear}-${String(targetMonth).padStart(2, '0')}-${String(dNum).padStart(2, '0')}`);
+            str = str.replace(dayLeading[0], ' ');
+          } else {
+            // Default to today only if no day number is given at all
+            dates.push(bkk.dateStr);
+          }
+        }
+      }
+
+      // 3. Detect Time
+      let time = "";
+      const timeColon = str.match(/([0-1]?\d|2[0-3])[:.]([0-5]\d)/);
+      const timeAfternoon = str.match(/บ่าย\s*([1-5])/);
+      const timeThai = str.match(/(?:ตอน|ช่วง|เวลา)?\s*([0-1]?\d|2[0-3])\s*(?:โมง|น\.|นาฬิกา)/);
+
+      if (timeColon) {
+        let hr = String(timeColon[1]).padStart(2, '0');
+        let min = String(timeColon[2]).padStart(2, '0');
+        time = `${hr}:${min}`;
+        str = str.replace(timeColon[0], ' ');
+      } else if (timeAfternoon) {
+        let hr = parseInt(timeAfternoon[1]) + 12;
+        time = `${hr}:00`;
+        str = str.replace(timeAfternoon[0], ' ');
+      } else if (timeThai) {
+        let hr = parseInt(timeThai[1]);
+        if (str.includes("บ่าย") && hr < 12) hr += 12;
+        time = `${String(hr).padStart(2, '0')}:00`;
+        str = str.replace(timeThai[0], ' ');
+      }
+
+      // 4. Detect Location (Follows ที่... / ไปที่... / ณ...)
+      let location = "";
+      const locMatch = str.match(/(?:ที่|ไปที่|ณ)\s*([ก-๙a-zA-Z0-9_.\-\s]+)$/);
+      const locMidMatch = str.match(/(?:ที่|ไปที่|ณ)\s*([ก-๙a-zA-Z0-9_.\-]+)/);
+
+      if (locMatch && !locMatch[1].match(/^(วัน|โมง|นาฬิกา|เดือน|ปี)/)) {
+        location = locMatch[1].trim();
+        str = str.replace(locMatch[0], ' ');
+      } else if (locMidMatch && !locMidMatch[1].match(/^(วัน|โมง|นาฬิกา|เดือน|ปี)/)) {
+        location = locMidMatch[1].trim();
+        str = str.replace(locMidMatch[0], ' ');
+      }
+
+      // 5. Title / What to do
+      let title = str
+        .replace(/^(นัด|มีนัด|เตือน|อย่าลืม|ต้อง|ไป)\s*/, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      if (!title) title = rawText.trim();
+
+      return {
+        title,
+        dates,
+        time,
+        location
+      };
+    }
+
     function processWithLocalParser(inputText) {
       const bkk = getBangkokDateParts(new Date());
 
@@ -1184,7 +1293,7 @@ Respond ONLY with JSON without markdown:
       if (/^(ร่างข้อความ|พิมพ์ข้อความ|เขียนข้อความ|ร่างจดหมาย)/i.test(inputText)) {
         return {
           intent: 'draft',
-          draftText: `เรียน [ชื่อผู้รับ],\n\nขออนุญาตแจ้งเรื่อง ${inputText.replace(/^(ร่างข้อความ|พิมพ์ข้อความ|เขียนข้อความ)\s*/, '')} ครับ\nหากมีข้อสงสัยหรือต้องการสอบถามเพิ่มเติม สามารถแจ้งได้ตลอดเวลาครับ\n\nขอบคุณครับ\nนายธนวัฒน์ (คุณเดียร์)`,
+          draftText: `เรียน [ชื่อผู้รับ],\n\nขออนุญาตแจ้งเรื่อง ${inputText.replace(/^(ร่างข้อความ|พิมพ์ข้อความ|เขียนข้อความ)\s*/, '')} ครับ\nหากมีข้อสงสัยหรือต้องการสอบถามเพิ่มเติม สามารถแจ้งได้ตลอดเวลาครับ\n\nขอบคุณครับ\nคุณเดียร์`,
           summary: "ร่างข้อความให้เรียบร้อยแล้วครับ สามารถกดปุ่มคัดลอกด้านล่างเพื่อนำไปส่งได้ทันทีครับ"
         };
       }
@@ -1198,59 +1307,20 @@ Respond ONLY with JSON without markdown:
         return { intent: 'query', queryTarget: qTarget };
       }
 
-      // 3. Multi-item Split (Brain dump offline fallback by splitting "แล้วก็", "และ", "ต่อด้วย")
+      // 3. Multi-item Split (Brain dump support)
       const clauses = inputText.split(/(?:แล้วก็|ต่อด้วย|และก็|แล้วค่อย)/);
       const extractedEvents = [];
 
       clauses.forEach(clause => {
-        let targetMonth = bkk.month;
-        let targetYear = bkk.year;
-        for (const item of thaiMonthsList) {
-          if (item.re.test(clause)) {
-            targetMonth = item.num;
-            if (targetMonth < bkk.month) targetYear = bkk.year + 1;
-            break;
-          }
-        }
-
-        let time = "";
-        const timeMatch = clause.match(/(\d{1,2}[:.]\d{2})|((?:บ่าย|เช้า|ตอน)?\s*(\d{1,2})\s*(?:โมง|น\.|นาฬิกา))/i);
-        if (timeMatch) {
-          if (timeMatch[1]) {
-            time = timeMatch[1].replace('.', ':');
-            if (time.length === 4) time = '0' + time;
-          } else if (timeMatch[4]) {
-            let hr = parseInt(timeMatch[4]);
-            if (clause.includes("บ่าย") && hr < 12) hr += 12;
-            time = `${String(hr).padStart(2, '0')}:00`;
-          }
-        }
-
-        let location = "";
-        const locMatch = clause.match(/(?:ที่|ไปที่|ณ)\s*([ก-๙a-zA-Z0-9_.\-]+)/);
-        if (locMatch && !locMatch[1].match(/(วัน|โมง|นาฬิกา|เดือน|ปี)/)) {
-          location = locMatch[1].trim();
-        }
-
-        let date = bkk.dateStr;
-        if (clause.includes("พรุ่งนี้")) {
-          const tom = new Date();
-          tom.setDate(tom.getDate() + 1);
-          date = getBangkokDateParts(tom).dateStr;
-        }
-
-        let cleanTitle = clause
-          .replace(/(?:ที่|ไปที่|ณ)\s*([ก-๙a-zA-Z0-9_.\-]+)/g, '')
-          .replace(/(\d{1,2}[:.]\d{2})|((?:บ่าย|เช้า|ตอน)?\s*(\d{1,2})\s*(?:โมง|น\.|นาฬิกา))/g, '')
-          .replace(/^(นัด|ไป|มีนัด|เตือน|อย่าลืม|ต้อง)/, '')
-          .trim();
-
-        if (cleanTitle) {
-          extractedEvents.push({
-            title: cleanTitle,
-            date: date,
-            time: time,
-            location: location
+        const itemResult = parseSingleScheduleItem(clause, bkk);
+        if (itemResult.title) {
+          itemResult.dates.forEach(dStr => {
+            extractedEvents.push({
+              title: itemResult.title,
+              date: dStr,
+              time: itemResult.time,
+              location: itemResult.location
+            });
           });
         }
       });
@@ -1288,7 +1358,6 @@ Respond ONLY with JSON without markdown:
         return;
       }
 
-      // Collect Events
       const rawEvents = res.events || [];
       if (rawEvents.length === 0 && res.title) {
         rawEvents.push({
@@ -1315,7 +1384,6 @@ Respond ONLY with JSON without markdown:
         createdEvents.push(newEvent);
       });
 
-      // Collect Tasks if specified
       if (res.tasks && res.tasks.length > 0) {
         res.tasks.forEach((t, tidx) => {
           AppDB.tasks.unshift({
